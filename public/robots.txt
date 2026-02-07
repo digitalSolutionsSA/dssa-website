@@ -1,0 +1,28 @@
+
+# Allow all web crawlers
+User-agent: *
+Allow: /
+
+# Specific crawler settings for major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+# Disallow crawling of admin or specific private areas
+Disallow: /admin/
+Disallow: /private/
+Disallow: /account/
+
+# Sitemap location
+Sitemap: https://digitalsolutionssa.com/sitemap.xml
+
+# Crawl delay for bots to prevent server overload
+Crawl-delay: 10
