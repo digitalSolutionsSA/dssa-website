@@ -18,84 +18,54 @@ const Hero = () => {
     }
   };
 
-  // Brand palette
   const COLORS = {
     black: "#000000",
-    deep: "#061B2D",
+    deep: "#061B2D", // deep-azure circles
     cyan: "#2BC7D6",
     cyan2: "#6FE9F3",
   };
 
-  // Stable particles
-  const particles = useMemo(() => {
-    return Array.from({ length: 10 }).map((_, i) => ({
-      x: (i * 41) % 100,
-      y: (i * 57) % 100,
-      s: 5 + ((i * 9) % 8),
-      o: 0.045 + ((i * 5) % 8) / 100,
-      d: i * 0.25,
-    }));
+  // Visible floating circles (deterministic)
+  const blobs = useMemo(() => {
+    return [
+      { x: 8, y: 18, s: 140, o: 0.42, d: 0.0, dur: 12 },
+      { x: 22, y: 72, s: 90, o: 0.35, d: 0.7, dur: 11 },
+      { x: 70, y: 22, s: 110, o: 0.38, d: 0.3, dur: 13 },
+      { x: 88, y: 60, s: 150, o: 0.30, d: 1.0, dur: 14 },
+      { x: 55, y: 80, s: 70, o: 0.36, d: 0.5, dur: 10 },
+      { x: 92, y: 88, s: 22, o: 0.75, d: 0.2, dur: 9 },
+    ];
   }, []);
 
   return (
     <section className="relative overflow-hidden bg-black">
-      {/* Fallback background */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `linear-gradient(180deg, ${COLORS.black} 0%, ${COLORS.deep} 100%)`,
-        }}
-      />
+      {/* Solid black background */}
+      <div className="absolute inset-0 bg-black" />
 
-      {/* Background video */}
-      <video
-        className="absolute inset-0 h-full w-full object-cover"
-        src="/hero.mp4"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-      />
-
-      {/* Dark overlay for readability */}
-      <div className="absolute inset-0 bg-black/70" />
-
-      {/* Ambient glows */}
-      <div
-        className="pointer-events-none absolute -top-32 -left-28 h-[420px] w-[420px] rounded-full blur-3xl opacity-25"
-        style={{
-          background: `radial-gradient(circle at center, ${COLORS.cyan2} 0%, transparent 60%)`,
-        }}
-      />
-      <div
-        className="pointer-events-none absolute -bottom-40 -right-40 h-[560px] w-[560px] rounded-full blur-3xl opacity-20"
-        style={{
-          background: `radial-gradient(circle at center, ${COLORS.cyan} 0%, transparent 55%)`,
-        }}
-      />
-
-      {/* Grain */}
-      <div className="pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-overlay [background-image:radial-gradient(rgba(255,255,255,0.18)_1px,transparent_1px)] [background-size:3px_3px]" />
-
-      {/* Particles */}
+      {/* Floating circles */}
       <div className="pointer-events-none absolute inset-0">
-        {particles.map((p, i) => (
+        {blobs.map((b, i) => (
           <span
             key={i}
             className="absolute rounded-full"
             style={{
-              left: `${p.x}%`,
-              top: `${p.y}%`,
-              width: `${p.s}px`,
-              height: `${p.s}px`,
-              background: COLORS.cyan,
-              opacity: p.o,
-              animation: `ds-float 6s ease-in-out ${p.d}s infinite`,
+              left: `${b.x}%`,
+              top: `${b.y}%`,
+              width: `${b.s}px`,
+              height: `${b.s}px`,
+              transform: "translate(-50%, -50%)",
+              background: COLORS.deep,
+              opacity: b.o,
+              boxShadow:
+                "0 0 0 1px rgba(255,255,255,0.03) inset, 0 0 22px rgba(6,27,45,0.35)",
+              animation: `ds-circle-float ${b.dur}s ease-in-out ${b.d}s infinite`,
             }}
           />
         ))}
       </div>
+
+      {/* Subtle grain */}
+      <div className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-overlay [background-image:radial-gradient(rgba(255,255,255,0.16)_1px,transparent_1px)] [background-size:3px_3px]" />
 
       {/* Content */}
       <div
@@ -107,21 +77,44 @@ const Hero = () => {
       >
         <div className="mx-auto flex min-h-[100svh] max-w-7xl items-center px-4 sm:px-6">
           <div className="w-full flex justify-center">
-            <div className="w-full max-w-3xl text-center">
-              <h1 className="mt-5 text-3xl font-extrabold leading-tight sm:text-5xl text-white">
+            <div className="w-full max-w-4xl text-center">
+              <h1
+                className="
+                  mt-4
+                  font-extrabold
+                  tracking-tight
+                  leading-[1.05]
+                  text-white
+                  text-4xl
+                  sm:text-5xl
+                  lg:text-6xl
+                  xl:text-7xl
+                "
+              >
                 DESIGNING THE FUTURE
                 <span className="block mt-2" style={{ color: COLORS.cyan2 }}>
                   OF YOUR BUSINESS.
                 </span>
               </h1>
 
-              <p className="mt-4 mx-auto max-w-2xl text-sm sm:text-base leading-relaxed text-white/70">
+              <p
+                className="
+                  mt-4
+                  mx-auto
+                  max-w-3xl
+                  text-base
+                  sm:text-lg
+                  lg:text-xl
+                  leading-relaxed
+                  text-white/70
+                "
+              >
                 Modern websites, apps, automation and marketing that actually
                 performs. Clean builds, sharp design, and systems that don’t
                 fall apart the moment a client clicks a button.
               </p>
 
-              <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Button
                   className="px-7 py-5 text-base text-white"
                   onClick={scrollToContact}
@@ -135,14 +128,23 @@ const Hero = () => {
                 <Button
                   variant="outline"
                   onClick={scrollToContact}
-                  className="px-7 py-5 text-base border-white/15 bg-white/5 hover:bg-white/10 text-white"
+                  className="
+                    px-7 py-5 text-base
+                    border-white/20
+                    bg-white/5
+                    text-white
+                    transition-all
+                    hover:bg-white
+                    hover:text-black
+                    hover:border-white
+                  "
                 >
                   Learn More
                 </Button>
               </div>
 
               <p
-                className="mt-5 text-sm font-semibold tracking-wide"
+                className="mt-6 text-sm sm:text-base font-semibold tracking-wide"
                 style={{ color: COLORS.cyan }}
               >
                 BUILD. BRAND. AUTOMATE.
@@ -154,9 +156,13 @@ const Hero = () => {
 
       {/* Keyframes */}
       <style>{`
-        @keyframes ds-float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
+        @keyframes ds-circle-float {
+          0%, 100% { transform: translate(-50%, -50%) translate3d(0, 0, 0); }
+          50% { transform: translate(-50%, -50%) translate3d(18px, -14px, 0); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          span[style*="ds-circle-float"] { animation: none !important; }
         }
       `}</style>
     </section>
