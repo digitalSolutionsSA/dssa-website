@@ -1,87 +1,114 @@
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Progress } from "@/components/ui/progress";
-import { Skeleton } from "@/components/ui/skeleton";
-import { LogoIcon } from "./Logo";
-import { Sparkles, Server, Code } from "lucide-react";
 
 const LoadingScreen = () => {
+  // Locked brand palette (no deviations)
+  const BLACK = "#000000";
+  const DEEP_AZURE = "#061B2D";
+  const LIGHT_BLUE = "#6FE9F3";
+
   const [progress, setProgress] = useState(0);
-  const [loadingText, setLoadingText] = useState("Initializing assets...");
-  
+  const [loadingText, setLoadingText] = useState("Booting systems...");
+
+  const messages = useMemo(
+    () => [
+      "Booting systems...",
+      "Loading core modules...",
+      "Optimising performance...",
+      "Almost there...",
+    ],
+    []
+  );
+
   useEffect(() => {
-    const loadingMessages = [
-      "Initializing assets...",
-      "Loading resources...",
-      "Setting up digital environment...",
-      "Preparing your experience...",
-      "Almost ready..."
-    ];
-    
-    let messageIndex = 0;
-    
+    let msgIndex = 0;
+
     const messageTimer = setInterval(() => {
-      messageIndex = (messageIndex + 1) % loadingMessages.length;
-      setLoadingText(loadingMessages[messageIndex]);
-    }, 1500);
-    
+      msgIndex = (msgIndex + 1) % messages.length;
+      setLoadingText(messages[msgIndex]);
+    }, 1400);
+
     const progressTimer = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(progressTimer);
-          return 100;
-        }
-        const increment = Math.random() * 12 + 3;
-        return Math.min(prev + increment, 100);
+      setProgress((prev) => {
+        if (prev >= 100) return 100;
+        return Math.min(prev + Math.random() * 10 + 6, 100);
       });
-    }, 200);
-    
+    }, 220);
+
     return () => {
       clearInterval(progressTimer);
       clearInterval(messageTimer);
     };
-  }, []);
+  }, [messages]);
 
   return (
-    <div className="fixed inset-0 bg-digital-navy z-50 flex flex-col items-center justify-center p-4 overflow-hidden">
-      {/* Background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-10 left-10 opacity-5">
-          <Code size={100} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden text-white">
+      {/* Base background */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `linear-gradient(180deg, ${BLACK} 0%, ${DEEP_AZURE} 100%)`,
+        }}
+      />
+
+      {/* Subtle glow only in brand blue */}
+      <div
+        className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full blur-[120px] opacity-25"
+        style={{
+          background: `radial-gradient(circle at center, ${LIGHT_BLUE} 0%, transparent 65%)`,
+        }}
+      />
+
+      {/* Grain */}
+      <div className="pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-overlay [background-image:radial-gradient(rgba(255,255,255,0.18)_1px,transparent_1px)] [background-size:3px_3px]" />
+
+      {/* Content */}
+      <div className="relative z-10 w-full max-w-md px-6 text-center">
+        {/* Logo */}
+        <div className="relative mb-6 flex justify-center">
+          <div
+            className="absolute -inset-6 rounded-full blur-2xl opacity-30"
+            style={{
+              background: `radial-gradient(circle at center, ${LIGHT_BLUE} 0%, transparent 70%)`,
+            }}
+          />
+          <img
+            src="/dssa-logo.png"
+            alt="Digital Solutions SA"
+            className="relative h-20 w-auto object-contain"
+          />
         </div>
-        <div className="absolute bottom-10 right-10 opacity-5">
-          <Server size={100} />
-        </div>
-        <div className="absolute top-1/2 left-1/3 opacity-10 animate-pulse">
-          <Sparkles size={60} />
-        </div>
-      </div>
-      
-      <div className="animate-float text-center max-w-lg">
-        <div className="relative">
-          <LogoIcon className="h-24 w-24 mx-auto mb-6" />
-          <div className="absolute -top-2 -right-2 w-6 h-6 bg-digital-gradient rounded-full animate-pulse"></div>
-          <div className="absolute -bottom-1 -left-2 w-4 h-4 bg-digital-teal rounded-full animate-pulse" style={{ animationDelay: "0.5s" }}></div>
-        </div>
-        
-        <h1 className="text-4xl font-bold mb-2 text-white gradient-text">
+
+        {/* Brand text */}
+        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
           Digital Solutions SA
         </h1>
-        <p className="text-digital-teal mb-8">Transforming businesses through innovative technology</p>
-      </div>
-      
-      <div className="w-full max-w-md space-y-4 relative">
-        <Progress value={progress} className="h-3 bg-white/10 rounded-lg overflow-hidden" />
-        <div className="flex justify-between text-sm text-white/70">
-          <span className="font-medium">{Math.round(progress)}%</span>
-          <span className="animate-pulse">{loadingText}</span>
+
+        <p className="mt-2 text-sm text-white/65">
+          Designing the future of your business.
+        </p>
+
+        {/* Progress */}
+        <div className="mt-8 rounded-2xl border border-white/10 bg-black/40 p-4 backdrop-blur">
+          <Progress
+            value={progress}
+            className="h-2 rounded-full bg-white/10"
+          />
+
+          <div className="mt-3 flex justify-between text-xs text-white/60">
+            <span>{Math.round(progress)}%</span>
+            <span className="animate-pulse">{loadingText}</span>
+          </div>
         </div>
-      </div>
-      
-      <div className="mt-16 w-full max-w-md space-y-3">
-        <Skeleton className="h-3 w-3/4 mx-auto bg-white/10 rounded-full" />
-        <Skeleton className="h-3 w-1/2 mx-auto bg-white/10 rounded-full" />
-        <Skeleton className="h-3 w-2/3 mx-auto bg-white/10 rounded-full" />
+
+        {/* Micro accent */}
+        <div className="mt-6 flex justify-center gap-2">
+          <span
+            className="h-1.5 w-12 rounded-full"
+            style={{ background: LIGHT_BLUE }}
+          />
+          <span className="h-1.5 w-6 rounded-full bg-white/20" />
+        </div>
       </div>
     </div>
   );

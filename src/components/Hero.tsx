@@ -1,18 +1,20 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 
 const Hero = () => {
   const phoneNumber = "+27639034514";
   const message = "Hello! I'm interested in Digital Solutions SA services.";
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+    message
+  )}`;
 
   const scrollToContact = () => {
     const contactSection = document.getElementById("contact");
     if (contactSection) {
       contactSection.scrollIntoView({ behavior: "smooth" });
     } else {
-      window.open(whatsappUrl, "_blank");
+      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -36,11 +38,75 @@ const Hero = () => {
     }));
   }, []);
 
+  // Console typing animation (attention grabber without being cringe)
+  const consoleLines = useMemo(
+    () => [
+      "Booting Digital Solutions SA...",
+      "Loading: Web Development ✓",
+      "Loading: Branding & Design ✓",
+      "Loading: AI Automation ✓",
+      "Loading: Marketing Systems ✓",
+      "Status: Ready to build something serious.",
+    ],
+    []
+  );
+
+  const [typed, setTyped] = useState<string[]>([""]);
+  const [lineIdx, setLineIdx] = useState(0);
+  const [charIdx, setCharIdx] = useState(0);
+
+  useEffect(() => {
+    // initialize typed lines once
+    setTyped(["> "]);
+    setLineIdx(0);
+    setCharIdx(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!consoleLines.length) return;
+
+    const current = consoleLines[lineIdx] ?? "";
+    const doneAll = lineIdx >= consoleLines.length;
+
+    if (doneAll) return;
+
+    const timer = setTimeout(() => {
+      // Ensure typed array has the current line slot
+      setTyped((prev) => {
+        const next = [...prev];
+        if (!next[lineIdx]) next[lineIdx] = "> ";
+        return next;
+      });
+
+      // type next character
+      if (charIdx < current.length) {
+        setTyped((prev) => {
+          const next = [...prev];
+          next[lineIdx] = (next[lineIdx] ?? "> ") + current[charIdx];
+          return next;
+        });
+        setCharIdx((c) => c + 1);
+      } else {
+        // move to next line after a short pause
+        if (lineIdx < consoleLines.length - 1) {
+          setTyped((prev) => [...prev, "> "]);
+          setLineIdx((l) => l + 1);
+          setCharIdx(0);
+        } else {
+          // finished
+          setLineIdx(consoleLines.length);
+        }
+      }
+    }, charIdx === 0 ? 260 : 22);
+
+    return () => clearTimeout(timer);
+  }, [charIdx, consoleLines, lineIdx]);
+
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative overflow-hidden bg-black">
       {/* Background */}
       <div className="absolute inset-0 bg-black" />
-
 
       {/* Ambient glows */}
       <div
@@ -78,26 +144,29 @@ const Hero = () => {
         ))}
       </div>
 
-      {/* Content: one screen */}
-      <div className="relative h-[100svh]">
-        <div className="mx-auto flex h-full max-w-7xl items-center px-4 sm:px-6">
+      {/* Content */}
+      <div
+        className="relative"
+        style={{
+          paddingTop: "calc(env(safe-area-inset-top, 0px) + 96px)",
+          minHeight: "100svh",
+        }}
+      >
+        <div className="mx-auto flex min-h-[100svh] max-w-7xl items-center px-4 sm:px-6">
           <div className="grid w-full items-center gap-10 lg:grid-cols-12">
             {/* LEFT */}
             <div className="lg:col-span-7">
-              
-
-             <h1 className="mt-5 text-3xl font-extrabold leading-tight sm:text-5xl text-white">
-  DESIGNING THE FUTURE
-  <span className="block mt-2 text-cyan-400">
-    OF YOUR BUSINESS.
-  </span>
-</h1>
-
+              <h1 className="mt-5 text-3xl font-extrabold leading-tight sm:text-5xl text-white">
+                DESIGNING THE FUTURE
+                <span className="block mt-2" style={{ color: COLORS.cyan2 }}>
+                  OF YOUR BUSINESS.
+                </span>
+              </h1>
 
               <p className="mt-4 max-w-xl text-sm sm:text-base leading-relaxed text-white/70">
-                Modern websites, apps, automation and marketing that actually performs.
-                Clean builds, sharp design, and systems that don’t fall apart the moment
-                a client clicks a button.
+                Modern websites, apps, automation and marketing that actually
+                performs. Clean builds, sharp design, and systems that don’t
+                fall apart the moment a client clicks a button.
               </p>
 
               <div className="mt-5 flex flex-col sm:flex-row gap-3">
@@ -108,8 +177,7 @@ const Hero = () => {
                     background: `linear-gradient(90deg, ${COLORS.cyan} 0%, ${COLORS.cyan2} 100%)`,
                   }}
                 >
-                  Get Started
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  Get Started <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
 
                 <Button
@@ -121,91 +189,98 @@ const Hero = () => {
                 </Button>
               </div>
 
-              <p className="mt-4 text-sm font-semibold" style={{ color: COLORS.cyan }}>
+              <p
+                className="mt-4 text-sm font-semibold"
+                style={{ color: COLORS.cyan }}
+              >
                 BUILD. BRAND. AUTOMATE.
               </p>
             </div>
 
-            {/* RIGHT: EXACT block vibe (no header/counters) */}
+            {/* RIGHT: Replace grid block with a Live Console + Proof chips */}
             <div className="lg:col-span-5 lg:col-start-8 flex justify-center lg:justify-end">
-              {/* Block wrapper to match screenshot feel */}
               <div
-                className="relative rounded-[22px] p-6"
+                className="relative w-full max-w-[430px] rounded-[22px] p-5 sm:p-6"
                 style={{
-                  // the block in your screenshot has its own soft teal haze
                   background:
-                    "radial-gradient(120% 120% at 20% 10%, rgba(43,199,214,0.22) 0%, rgba(0,0,0,0) 55%), linear-gradient(180deg, rgba(8,28,42,0.55) 0%, rgba(6,22,33,0.35) 100%)",
+                    "radial-gradient(120% 120% at 20% 10%, rgba(43,199,214,0.22) 0%, rgba(0,0,0,0) 55%), linear-gradient(180deg, rgba(8,28,42,0.60) 0%, rgba(6,22,33,0.38) 100%)",
                   boxShadow:
-                    "0 18px 70px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.07)",
+                    "0 18px 70px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.08)",
                   backdropFilter: "blur(10px)",
                 }}
               >
-                {/* 3x3 grid sized like your screenshot */}
-                <div className="grid grid-cols-3 gap-5">
-                  {Array.from({ length: 9 }).map((_, i) => {
-                    const isCenter = i === 4;
+                {/* Header bar */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="h-2.5 w-2.5 rounded-full bg-white/25" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+                  </div>
 
-                    return (
-                      <div
-                        key={i}
-                        className="relative rounded-[18px]"
-                        style={{
-                          width: "96px",
-                          height: "96px",
-                          background:
-                            "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)",
-                          boxShadow:
-                            "inset 0 0 0 1px rgba(255,255,255,0.10), inset 0 0 0 2px rgba(43,199,214,0.10)",
-                          border: "1px solid rgba(43,199,214,0.18)",
-                        }}
-                      >
-                        {/* inner glow rim like screenshot */}
-                        <div
-                          className="absolute inset-[6px] rounded-[14px]"
-                          style={{
-                            boxShadow:
-                              "inset 0 0 0 1px rgba(255,255,255,0.08)",
-                            background:
-                              "linear-gradient(135deg, rgba(43,199,214,0.10) 0%, rgba(0,0,0,0) 55%)",
-                            opacity: 0.85,
-                          }}
-                        />
-
-                        {/* tiny center dot for non-logo tiles */}
-                        {!isCenter && (
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="h-2.5 w-2.5 rounded-full bg-white/20" />
-                          </div>
-                        )}
-
-                        {/* center logo tile with stronger glow */}
-                        {isCenter && (
-                          <>
-                            <div
-                              className="absolute inset-0 rounded-[18px]"
-                              style={{
-                                boxShadow:
-                                  "0 0 0 2px rgba(43,199,214,0.25) inset, 0 0 26px rgba(43,199,214,0.22)",
-                              }}
-                            />
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="rounded-[14px] bg-white/95 p-2 shadow-md">
-                                <img
-                                  src="/lovable-uploads/bf327e4b-7c8f-4fdb-919e-2662d244e513.png"
-                                  alt="Digital Solutions SA Logo"
-                                  className="h-12 w-12 object-contain"
-                                />
-                              </div>
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    );
-                  })}
+                  <div
+                    className="text-xs font-semibold tracking-wide"
+                    style={{ color: COLORS.cyan2 }}
+                  >
+                    LIVE BUILD CONSOLE
+                  </div>
                 </div>
 
-                {/* Responsive scaling without changing the look */}
-                <div className="mt-0 hidden" />
+                {/* Console body */}
+                <div className="mt-4 rounded-2xl border border-white/10 bg-black/40 p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div
+                      className="h-2 w-2 rounded-full animate-pulse"
+                      style={{ background: COLORS.cyan }}
+                    />
+                    <div className="text-xs text-white/70">
+                      system.dssa • connected
+                    </div>
+                  </div>
+
+                  <div className="font-mono text-[12px] leading-relaxed text-white/80">
+                    {typed.map((line, i) => (
+                      <div key={i} className="whitespace-pre-wrap">
+                        {line}
+                        {i === typed.length - 1 && lineIdx < consoleLines.length && (
+                          <span className="ds-caret">▌</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* mini “proof” row */}
+                  <div className="mt-4 grid grid-cols-2 gap-2">
+                    {[
+                      "Fast builds",
+                      "Mobile-first",
+                      "Clean UI",
+                      "Automation-ready",
+                    ].map((t) => (
+                      <div
+                        key={t}
+                        className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2"
+                      >
+                        <CheckCircle2
+                          className="h-4 w-4"
+                          style={{ color: COLORS.cyan2 }}
+                        />
+                        <span className="text-xs text-white/75">{t}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* CTA inside panel */}
+                <button
+                  onClick={scrollToContact}
+                  className="mt-4 w-full rounded-2xl px-4 py-3 text-sm font-semibold text-white transition hover:opacity-95"
+                  style={{
+                    background: `linear-gradient(90deg, ${COLORS.cyan} 0%, ${COLORS.cyan2} 100%)`,
+                    boxShadow: "0 10px 30px rgba(43,199,214,0.16)",
+                  }}
+                >
+                  Start a project on WhatsApp →
+                </button>
               </div>
             </div>
           </div>
@@ -218,13 +293,15 @@ const Hero = () => {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-10px); }
         }
-
-        @media (max-width: 640px) {
-          /* scale the entire block down a bit on phones while keeping proportions */
-          .ds-block-scale {
-            transform: scale(0.92);
-            transform-origin: center;
-          }
+        .ds-caret {
+          display: inline-block;
+          margin-left: 2px;
+          animation: ds-blink 1s steps(1) infinite;
+          opacity: 0.85;
+        }
+        @keyframes ds-blink {
+          0%, 49% { opacity: 1; }
+          50%, 100% { opacity: 0; }
         }
       `}</style>
     </section>

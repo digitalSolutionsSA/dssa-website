@@ -28,20 +28,17 @@ const Footer = () => {
   const ACCENT_GRADIENT = "linear-gradient(90deg, #2BC7D6 0%, #6FE9F3 100%)";
 
   const openServiceDialog = (serviceId: string) => {
-    // Find the service card element and click its "Learn more" button
     const serviceCard = document.querySelector(`#${serviceId}`);
     const learnMoreButton = serviceCard?.querySelector("button");
     learnMoreButton?.click();
   };
 
   const goToWork = () => {
-    // If you have a #work section, scroll to it.
     const workSection = document.getElementById("work");
     if (workSection) {
       workSection.scrollIntoView({ behavior: "smooth" });
       return;
     }
-    // Otherwise fall back to /work route (if you have it)
     window.location.href = "/work";
   };
 
@@ -65,6 +62,7 @@ const Footer = () => {
             "radial-gradient(circle at center, rgba(43,199,214,0.45) 0%, transparent 55%)",
         }}
       />
+
       {/* grain */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-overlay [background-image:radial-gradient(rgba(255,255,255,0.16)_1px,transparent_1px)] [background-size:3px_3px]" />
 
@@ -72,13 +70,11 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="col-span-1 md:col-span-3 lg:col-span-1">
-            <div className="bg-white/90 p-1 rounded-md inline-block mb-4">
-              <img
-                src="/lovable-uploads/bf327e4b-7c8f-4fdb-919e-2662d244e513.png"
-                alt="Digital Solutions SA Logo"
-                className="h-12"
-              />
-            </div>
+            <img
+              src="/dssa-logo.png"
+              alt="Digital Solutions SA Logo"
+              className="h-12 mb-4 object-contain"
+            />
 
             <p className="text-white/70 mb-4">
               Empowering businesses through innovative digital solutions and
@@ -86,7 +82,6 @@ const Footer = () => {
             </p>
 
             <div className="flex space-x-3">
-              {/* Facebook */}
               <a
                 href="https://www.facebook.com/profile.php?id=61574721767434"
                 target="_blank"
@@ -97,7 +92,6 @@ const Footer = () => {
                 <Facebook className="h-5 w-5 text-white" />
               </a>
 
-              {/* Instagram */}
               <a
                 href="https://www.instagram.com/digitalsolutions.sa?igsh=MTBqa3I1ejk4ZnBzdg=="
                 target="_blank"
@@ -108,9 +102,8 @@ const Footer = () => {
                 <Instagram className="h-5 w-5 text-white" />
               </a>
 
-              {/* TikTok */}
               <a
-                href="#"
+                href="https://www.tiktok.com/@digitalsolutionssa?_r=1&_t=ZS-93kA254ZFmn"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-colors"
@@ -126,47 +119,23 @@ const Footer = () => {
           <div>
             <h3 className="font-bold text-lg mb-4">Services</h3>
             <ul className="space-y-3">
-              <li>
-                <button
-                  onClick={() => openServiceDialog("web-development")}
-                  className="text-white/70 hover:text-white transition-colors text-left"
-                  style={{ outlineColor: ACCENT }}
-                >
-                  Web Development
-                </button>
-              </li>
+              {[
+                ["Web Development", "web-development"],
+                ["Brand & Design", "brand-and-design"],
+                ["App Development", "app-development"],
+                ["Marketing", "digital-marketing"],
+              ].map(([label, id]) => (
+                <li key={id}>
+                  <button
+                    onClick={() => openServiceDialog(id)}
+                    className="text-white/70 hover:text-white transition-colors text-left"
+                    style={{ outlineColor: ACCENT }}
+                  >
+                    {label}
+                  </button>
+                </li>
+              ))}
 
-              <li>
-                <button
-                  onClick={() => openServiceDialog("brand-and-design")}
-                  className="text-white/70 hover:text-white transition-colors text-left"
-                  style={{ outlineColor: ACCENT }}
-                >
-                  Brand &amp; Design
-                </button>
-              </li>
-
-              <li>
-                <button
-                  onClick={() => openServiceDialog("app-development")}
-                  className="text-white/70 hover:text-white transition-colors text-left"
-                  style={{ outlineColor: ACCENT }}
-                >
-                  App Development
-                </button>
-              </li>
-
-              <li>
-                <button
-                  onClick={() => openServiceDialog("digital-marketing")}
-                  className="text-white/70 hover:text-white transition-colors text-left"
-                  style={{ outlineColor: ACCENT }}
-                >
-                  Marketing
-                </button>
-              </li>
-
-              {/* NEW: Our Work */}
               <li className="pt-2">
                 <button
                   onClick={goToWork}
@@ -188,26 +157,17 @@ const Footer = () => {
             <h3 className="font-bold text-lg mb-4">Company</h3>
             <ul className="space-y-3">
               <li>
-                <a
-                  href="#about"
-                  className="text-white/70 hover:text-white transition-colors"
-                >
+                <a href="#about" className="text-white/70 hover:text-white">
                   About Us
                 </a>
               </li>
               <li>
-                <a
-                  href="#contact"
-                  className="text-white/70 hover:text-white transition-colors"
-                >
+                <a href="#contact" className="text-white/70 hover:text-white">
                   Contact
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-white/70 hover:text-white transition-colors"
-                >
+                <a href="#" className="text-white/70 hover:text-white">
                   Support
                 </a>
               </li>
@@ -221,7 +181,7 @@ const Footer = () => {
               <li>
                 <button
                   onClick={() => setTermsOpen(true)}
-                  className="text-white/70 hover:text-white transition-colors text-left"
+                  className="text-white/70 hover:text-white"
                 >
                   Terms of Service
                 </button>
@@ -229,7 +189,7 @@ const Footer = () => {
               <li>
                 <button
                   onClick={() => setPrivacyOpen(true)}
-                  className="text-white/70 hover:text-white transition-colors text-left"
+                  className="text-white/70 hover:text-white"
                 >
                   Privacy Policy
                 </button>
@@ -237,7 +197,7 @@ const Footer = () => {
               <li>
                 <button
                   onClick={() => setCookieOpen(true)}
-                  className="text-white/70 hover:text-white transition-colors text-left"
+                  className="text-white/70 hover:text-white"
                 >
                   Cookie Policy
                 </button>
@@ -251,15 +211,12 @@ const Footer = () => {
             © {new Date().getFullYear()} Digital Solutions SA. All rights
             reserved.
           </p>
-          <div className="mt-4 md:mt-0">
-            <p className="text-white/50 text-sm">
-              Three Rivers, Vereeniging, Gauteng, South Africa
-            </p>
-          </div>
+          <p className="mt-4 md:mt-0 text-white/50 text-sm">
+            Three Rivers, Vereeniging, Gauteng, South Africa
+          </p>
         </div>
       </div>
 
-      {/* Policy Dialogs */}
       <PrivacyPolicy open={privacyOpen} onOpenChange={setPrivacyOpen} />
       <TermsOfService open={termsOpen} onOpenChange={setTermsOpen} />
       <CookiePolicy open={cookieOpen} onOpenChange={setCookieOpen} />
