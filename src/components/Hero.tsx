@@ -19,35 +19,46 @@ const Hero = () => {
   };
 
   const COLORS = {
-    black: "#000000",
-    deep: "#061B2D", // deep-azure circles
+    deep: "#061B2D",
     cyan: "#2BC7D6",
     cyan2: "#6FE9F3",
   };
 
-  // Visible floating circles (deterministic)
-  const blobs = useMemo(() => {
-    return [
+  const blobs = useMemo(
+    () => [
       { x: 8, y: 18, s: 140, o: 0.42, d: 0.0, dur: 12 },
       { x: 22, y: 72, s: 90, o: 0.35, d: 0.7, dur: 11 },
       { x: 70, y: 22, s: 110, o: 0.38, d: 0.3, dur: 13 },
-      { x: 88, y: 60, s: 150, o: 0.30, d: 1.0, dur: 14 },
+      { x: 88, y: 60, s: 150, o: 0.3, d: 1.0, dur: 14 },
       { x: 55, y: 80, s: 70, o: 0.36, d: 0.5, dur: 10 },
-      { x: 92, y: 88, s: 22, o: 0.75, d: 0.2, dur: 9 },
-    ];
-  }, []);
+    ],
+    []
+  );
+
+  const BRAND_LOGOS = useMemo(
+    () => [
+      { src: "/bj.png", alt: "BJ" },
+      { src: "/blixim.png", alt: "Blixim" },
+      { src: "/cas.png", alt: "Canvas & Sign" },
+      { src: "/hermau.png", alt: "Hermau" },
+      { src: "/mcr.png", alt: "MCR" },
+      { src: "/PD.png", alt: "PD" },
+      { src: "/tk.png", alt: "TK" },
+      { src: "/trailers.png", alt: "Trailers" },
+    ],
+    []
+  );
 
   return (
     <section className="relative overflow-hidden bg-black">
-      {/* Solid black background */}
       <div className="absolute inset-0 bg-black" />
 
-      {/* Floating circles */}
+      {/* Floating blobs */}
       <div className="pointer-events-none absolute inset-0">
         {blobs.map((b, i) => (
           <span
             key={i}
-            className="absolute rounded-full"
+            className="ds-float absolute rounded-full"
             style={{
               left: `${b.x}%`,
               top: `${b.y}%`,
@@ -64,105 +75,215 @@ const Hero = () => {
         ))}
       </div>
 
-      {/* Subtle grain */}
+      {/* Grain */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-overlay [background-image:radial-gradient(rgba(255,255,255,0.16)_1px,transparent_1px)] [background-size:3px_3px]" />
 
-      {/* Content */}
+      {/* HERO CONTENT */}
       <div
         className="relative z-10"
         style={{
-          paddingTop: "calc(env(safe-area-inset-top, 0px) + 96px)",
-          minHeight: "100svh",
+          paddingTop:
+            "calc(env(safe-area-inset-top, 0px) + var(--hero-top))",
+          minHeight: "var(--hero-h)",
         }}
       >
-        <div className="mx-auto flex min-h-[100svh] max-w-7xl items-center px-4 sm:px-6">
-          <div className="w-full flex justify-center">
-            <div className="w-full max-w-4xl text-center">
-              <h1
-                className="
-                  mt-4
-                  font-extrabold
-                  tracking-tight
-                  leading-[1.05]
-                  text-white
-                  text-4xl
-                  sm:text-5xl
-                  lg:text-6xl
-                  xl:text-7xl
-                "
+        <div
+          className="mx-auto flex min-h-[var(--hero-h)] max-w-7xl items-center px-4 sm:px-6"
+          style={{ paddingBottom: "var(--hero-bottom)" }}
+        >
+          <div className="w-full text-center">
+            <h1 className="mt-2 font-extrabold tracking-tight leading-[1.05] text-white text-4xl sm:text-5xl lg:text-6xl xl:text-7xl">
+              DESIGNING THE FUTURE
+              <span className="block mt-2" style={{ color: COLORS.cyan2 }}>
+                OF YOUR BUSINESS.
+              </span>
+            </h1>
+
+            <p className="mt-4 mx-auto max-w-3xl text-base sm:text-lg lg:text-xl text-white/70">
+              Modern websites, apps, automation and marketing that actually
+              performs. Clean builds, sharp design, and systems that don’t fall
+              apart the moment a client clicks a button.
+            </p>
+
+            <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+              <Button
+                className="px-7 py-5 text-base text-white"
+                onClick={scrollToContact}
+                style={{
+                  background: `linear-gradient(90deg, ${COLORS.cyan} 0%, ${COLORS.cyan2} 100%)`,
+                }}
               >
-                DESIGNING THE FUTURE
-                <span className="block mt-2" style={{ color: COLORS.cyan2 }}>
-                  OF YOUR BUSINESS.
-                </span>
-              </h1>
+                Get Started <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
 
-              <p
-                className="
-                  mt-4
-                  mx-auto
-                  max-w-3xl
-                  text-base
-                  sm:text-lg
-                  lg:text-xl
-                  leading-relaxed
-                  text-white/70
-                "
+              <Button
+                variant="outline"
+                onClick={scrollToContact}
+                className="px-7 py-5 text-base border-white/20 bg-white/5 text-white hover:bg-white hover:text-black"
               >
-                Modern websites, apps, automation and marketing that actually
-                performs. Clean builds, sharp design, and systems that don’t
-                fall apart the moment a client clicks a button.
-              </p>
+                Learn More
+              </Button>
+            </div>
 
-              <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">
-                <Button
-                  className="px-7 py-5 text-base text-white"
-                  onClick={scrollToContact}
-                  style={{
-                    background: `linear-gradient(90deg, ${COLORS.cyan} 0%, ${COLORS.cyan2} 100%)`,
-                  }}
-                >
-                  Get Started <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
+            <p
+              className="mt-5 text-sm sm:text-base font-semibold tracking-wide"
+              style={{ color: COLORS.cyan }}
+            >
+              BUILD. BRAND. AUTOMATE.
+            </p>
+          </div>
+        </div>
 
-                <Button
-                  variant="outline"
-                  onClick={scrollToContact}
-                  className="
-                    px-7 py-5 text-base
-                    border-white/20
-                    bg-white/5
-                    text-white
-                    transition-all
-                    hover:bg-white
-                    hover:text-black
-                    hover:border-white
-                  "
-                >
-                  Learn More
-                </Button>
-              </div>
-
-              <p
-                className="mt-6 text-sm sm:text-base font-semibold tracking-wide"
-                style={{ color: COLORS.cyan }}
-              >
-                BUILD. BRAND. AUTOMATE.
+        {/* MARQUEE */}
+        <div className="absolute inset-x-0 bottom-0 z-20">
+          <div className="border-t border-white/10 bg-black/55 backdrop-blur-md">
+            <div className="max-w-7xl mx-auto px-4 pt-3">
+              <p className="text-center text-xs sm:text-sm text-white/70">
+                If these brands can trust us,{" "}
+                <span style={{ color: COLORS.cyan2 }}>so can you.</span>
               </p>
             </div>
+
+            <div className="relative overflow-hidden py-5">
+              {/* edge fades */}
+              <div className="pointer-events-none absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-black/90 to-transparent" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-black/90 to-transparent" />
+
+              {/* The track */}
+              <div className="ds-marquee">
+                {/* Group A */}
+                <div className="ds-marqueeGroup">
+                  {BRAND_LOGOS.map((logo) => (
+                    <div key={logo.src} className="ds-logoWrap" title={logo.alt}>
+                      <img
+                        src={logo.src}
+                        alt={logo.alt}
+                        className="ds-logoImg"
+                        draggable={false}
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                {/* Group B (duplicate of A) */}
+                <div className="ds-marqueeGroup" aria-hidden="true">
+                  {BRAND_LOGOS.map((logo) => (
+                    <div
+                      key={`${logo.src}-dup`}
+                      className="ds-logoWrap"
+                      title={logo.alt}
+                    >
+                      <img
+                        src={logo.src}
+                        alt={logo.alt}
+                        className="ds-logoImg"
+                        draggable={false}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div style={{ height: "env(safe-area-inset-bottom, 0px)" }} />
           </div>
         </div>
       </div>
 
-      {/* Keyframes */}
+      {/* STYLES */}
       <style>{`
+        :root {
+          --hero-h: 88svh;
+          --hero-top: 96px;
+          --hero-bottom: 140px;
+
+          /* Big logos */
+          --logo-h: 56px;
+          --logo-maxw: 320px;
+
+          /* spacing */
+          --logo-gap: 64px;
+        }
+
+        @media (max-width: 1024px) {
+          :root {
+            --hero-h: 84svh;
+            --hero-top: 80px;
+            --hero-bottom: 120px;
+            --logo-h: 48px;
+            --logo-maxw: 260px;
+            --logo-gap: 54px;
+          }
+        }
+
+        @media (max-width: 640px) {
+          :root {
+            --hero-h: 74svh;
+            --hero-top: 64px;
+            --hero-bottom: 108px;
+            --logo-h: 42px;
+            --logo-maxw: 220px;
+            --logo-gap: 44px;
+          }
+        }
+
         @keyframes ds-circle-float {
-          0%, 100% { transform: translate(-50%, -50%) translate3d(0, 0, 0); }
-          50% { transform: translate(-50%, -50%) translate3d(18px, -14px, 0); }
+          0%, 100% { transform: translate(-50%, -50%) translate3d(0,0,0); }
+          50% { transform: translate(-50%, -50%) translate3d(18px,-14px,0); }
+        }
+
+        /* Continuous right -> left with exact 2-group looping */
+        @keyframes ds-marquee-rtl {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+
+        .ds-marquee {
+          display: flex;
+          width: 200%;
+          will-change: transform;
+          animation: ds-marquee-rtl 22s linear infinite;
+        }
+
+        .ds-marqueeGroup {
+          flex: 0 0 50%;
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+          gap: var(--logo-gap);
+          padding: 0 24px;
+        }
+
+        .ds-logoWrap {
+          flex: 0 0 auto;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .ds-logoImg {
+          height: var(--logo-h);
+          max-width: var(--logo-maxw);
+          width: auto;
+          object-fit: contain;
+          opacity: 0.92;
+          filter: grayscale(1);
+          transition: opacity 220ms ease, filter 220ms ease, transform 220ms ease;
+        }
+
+        @media (hover: hover) {
+          .ds-marquee:hover { animation-play-state: paused; }
+          .ds-logoImg:hover {
+            opacity: 1;
+            filter: grayscale(0);
+            transform: translateY(-2px);
+          }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          span[style*="ds-circle-float"] { animation: none !important; }
+          .ds-float, .ds-marquee {
+            animation: none !important;
+          }
         }
       `}</style>
     </section>

@@ -77,7 +77,8 @@ const ContactForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   return (
     <form
-      className="space-y-4"
+      // KEY: fill parent height + flex column so we can stretch the message area
+      className="h-full flex flex-col gap-4"
       onSubmit={(e) => {
         e.preventDefault();
 
@@ -183,7 +184,8 @@ const ContactForm = ({ onSuccess }: { onSuccess: () => void }) => {
         )}
       </div>
 
-      <div>
+      {/* KEY: this block grows to fill remaining height */}
+      <div className="flex-1 flex flex-col min-h-0">
         <label className="block text-sm text-white/70 mb-1">
           Message <span className="text-white/70">*</span>
         </label>
@@ -191,8 +193,7 @@ const ContactForm = ({ onSuccess }: { onSuccess: () => void }) => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Your message"
-          rows={5}
-          className={inputBase}
+          className={`${inputBase} flex-1 h-full resize-none`}
           {...focusHandlers}
           required
         />

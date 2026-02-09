@@ -154,6 +154,15 @@ const Services = () => {
         WebkitFontSmoothing: "antialiased",
       }}
     >
+      {/* Thin gradient divider between Hero and Services (matches navbar gradient) */}
+      <div
+        className="absolute top-0 left-0 right-0 h-[2px] pointer-events-none"
+        style={{
+          background: `linear-gradient(90deg, ${COLORS.cyan} 0%, ${COLORS.cyan2} 100%)`,
+          opacity: 0.95,
+        }}
+      />
+
       {/* Ambient glows */}
       <div
         className="pointer-events-none absolute -top-40 -left-40 h-[620px] w-[620px] rounded-full blur-3xl opacity-25"
@@ -194,21 +203,9 @@ const Services = () => {
       <div className="relative mx-auto max-w-7xl px-4 md:px-6">
         {/* Header */}
         <div className="text-center mb-12 md:mb-16">
-          <div
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs tracking-wide text-white/80"
-            style={{
-              boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.04)",
-              // remove backdrop blur here too: it contributes to shimmer
-            }}
-          >
-            <span
-              className="h-2 w-2 rounded-full"
-              style={{ backgroundColor: COLORS.cyan }}
-            />
-            Our Expertise
-          </div>
+          {/* Removed "Our Expertise" pill */}
 
-          <h2 className="mt-5 text-3xl md:text-5xl font-extrabold text-white leading-tight">
+          <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight">
             SERVICES BUILT FOR{" "}
             <span
               style={{
@@ -320,32 +317,7 @@ const Services = () => {
           ))}
         </div>
 
-        {/* CTA */}
-        <div className="mt-14 text-center">
-          <Button
-            onClick={() =>
-              document
-                .getElementById("contact")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-            className="px-8 py-6 text-white rounded-full"
-            style={{
-              background: `linear-gradient(90deg, ${COLORS.cyan} 0%, ${COLORS.cyan2} 100%)`,
-            }}
-          >
-            Explore All Services
-          </Button>
-
-          <div className="flex justify-center mt-10">
-            <div
-              className="h-1 w-24 rounded-full"
-              style={{
-                background: `linear-gradient(90deg, transparent 0%, ${COLORS.cyan} 35%, ${COLORS.cyan2} 65%, transparent 100%)`,
-                opacity: 0.9,
-              }}
-            />
-          </div>
-        </div>
+        
       </div>
 
       {/* Dialog */}

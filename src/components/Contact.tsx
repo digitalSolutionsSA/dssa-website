@@ -44,10 +44,7 @@ const Contact = () => {
 
       <div className="relative container mx-auto px-4 md:px-6">
         <div className="text-center mb-16">
-          {/* badge */}
-          <span className="inline-block px-3 py-1 bg-white/5 backdrop-blur-sm rounded-full text-white/80 text-sm font-medium mb-3 border border-white/10">
-            Contact Us
-          </span>
+          {/* badge removed */}
 
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
             Get In{" "}

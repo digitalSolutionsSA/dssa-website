@@ -114,7 +114,6 @@ const NavBar: React.FC = () => {
               {/* Desktop Navigation */}
               <div className="hidden md:flex items-center gap-8">
                 <NavLinkItem href="#services" label="Services" />
-                <NavLinkItem href="#work" label="Our Work" />
                 <NavLinkItem href="#about" label="About" />
                 <a
                   href="#contact"
