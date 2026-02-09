@@ -44,6 +44,7 @@ const Hero = () => {
       { src: "/mcr.png", alt: "MCR" },
       { src: "/PD.png", alt: "PD" },
       { src: "/tk.png", alt: "TK" },
+      { src: "/PRG.png", alt: "PRG" },
       { src: "/trailers.png", alt: "Trailers" },
     ],
     []
@@ -197,9 +198,11 @@ const Hero = () => {
           --hero-top: 96px;
           --hero-bottom: 140px;
 
-          /* Big logos */
+          /* Keep marquee sizing the same */
           --logo-h: 56px;
-          --logo-maxw: 320px;
+
+          /* New: standardized logo "frame" width */
+          --logo-box-w: 180px;
 
           /* spacing */
           --logo-gap: 64px;
@@ -211,7 +214,7 @@ const Hero = () => {
             --hero-top: 80px;
             --hero-bottom: 120px;
             --logo-h: 48px;
-            --logo-maxw: 260px;
+            --logo-box-w: 160px;
             --logo-gap: 54px;
           }
         }
@@ -222,7 +225,7 @@ const Hero = () => {
             --hero-top: 64px;
             --hero-bottom: 108px;
             --logo-h: 42px;
-            --logo-maxw: 220px;
+            --logo-box-w: 140px;
             --logo-gap: 44px;
           }
         }
@@ -254,29 +257,35 @@ const Hero = () => {
           padding: 0 24px;
         }
 
+        /* ✅ Standardized logo frame (does NOT change marquee height) */
         .ds-logoWrap {
           flex: 0 0 auto;
+          width: var(--logo-box-w);
+          height: var(--logo-h);
           display: flex;
           align-items: center;
           justify-content: center;
         }
 
         .ds-logoImg {
-          height: var(--logo-h);
-          max-width: var(--logo-maxw);
+          max-width: 100%;
+          max-height: 100%;
           width: auto;
+          height: auto;
           object-fit: contain;
-          opacity: 0.92;
-          filter: grayscale(1);
-          transition: opacity 220ms ease, filter 220ms ease, transform 220ms ease;
+
+          opacity: 0.98;
+
+          /* helps coloured logos pop on dark glass */
+          filter: drop-shadow(0 8px 18px rgba(0,0,0,0.35));
+          transition: opacity 220ms ease, transform 220ms ease;
         }
 
         @media (hover: hover) {
           .ds-marquee:hover { animation-play-state: paused; }
           .ds-logoImg:hover {
             opacity: 1;
-            filter: grayscale(0);
-            transform: translateY(-2px);
+            transform: translateY(-2px) scale(1.03);
           }
         }
 
