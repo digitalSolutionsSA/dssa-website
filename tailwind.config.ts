@@ -20,7 +20,8 @@ export default {
 		extend: {
 			fontFamily: {
 				inter: ['Inter', 'sans-serif'],
-				display: ['"Bebas Neue"', 'sans-serif'],
+				stencil: ['"Black Ops One"', 'cursive'],
+				marker: ['"Permanent Marker"', 'cursive'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
