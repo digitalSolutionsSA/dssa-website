@@ -191,12 +191,11 @@ const NavBar: React.FC = () => {
           background-image: linear-gradient(
             90deg,
             #000000 0%,
-            #030822 30%,
-            #0512ce 55%,
-            #4d7fff 70%,
-            #ffffff 78%,
-            #4d7fff 86%,
-            #0512ce 93%,
+            #061B2D 35%,
+            #6FE9F3 60%,
+            #ffffff 75%,
+            #6FE9F3 88%,
+            #061B2D 96%,
             #000000 100%
           );
         }

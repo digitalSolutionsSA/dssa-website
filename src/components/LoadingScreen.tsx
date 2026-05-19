@@ -4,8 +4,8 @@ import { Progress } from "@/components/ui/progress";
 const LoadingScreen = () => {
   // Locked brand palette (no deviations)
   const BLACK = "#000000";
-  const DEEP_AZURE = "#030822";
-  const LIGHT_BLUE = "#4d7fff";
+  const DEEP_AZURE = "#061B2D";
+  const LIGHT_BLUE = "#6FE9F3";
 
   const [progress, setProgress] = useState(0);
   const [loadingText, setLoadingText] = useState("Booting systems...");

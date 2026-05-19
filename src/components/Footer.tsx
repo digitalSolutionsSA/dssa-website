@@ -23,9 +23,9 @@ const Footer = () => {
 
   // Brand (match Hero/Services)
   const BG_GRADIENT =
-    "linear-gradient(135deg, #000000 0%, #000000 65%, #030822 100%)";
-  const ACCENT = "#0512ce";
-  const ACCENT_GRADIENT = "linear-gradient(90deg, #0512ce 0%, #4d7fff 100%)";
+    "linear-gradient(135deg, #000000 0%, #000000 65%, #061826 100%)";
+  const ACCENT = "#2BC7D6";
+  const ACCENT_GRADIENT = "linear-gradient(90deg, #2BC7D6 0%, #6FE9F3 100%)";
 
   const openServiceDialog = (serviceId: string) => {
     const serviceCard = document.querySelector(`#${serviceId}`);
@@ -52,14 +52,14 @@ const Footer = () => {
         className="pointer-events-none absolute -top-40 -left-40 h-[520px] w-[520px] rounded-full blur-3xl opacity-15"
         style={{
           background:
-            "radial-gradient(circle at center, rgba(77,127,255,0.50) 0%, transparent 60%)",
+            "radial-gradient(circle at center, rgba(111,233,243,0.50) 0%, transparent 60%)",
         }}
       />
       <div
         className="pointer-events-none absolute -bottom-48 -right-48 h-[620px] w-[620px] rounded-full blur-3xl opacity-10"
         style={{
           background:
-            "radial-gradient(circle at center, rgba(5,18,206,0.45) 0%, transparent 55%)",
+            "radial-gradient(circle at center, rgba(43,199,214,0.45) 0%, transparent 55%)",
         }}
       />
 
