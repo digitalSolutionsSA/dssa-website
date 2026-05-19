@@ -40,11 +40,16 @@ const Hero = () => {
       { src: "/bj.png", alt: "BJ" },
       { src: "/blixim.png", alt: "Blixim" },
       { src: "/cas.png", alt: "Canvas & Sign" },
+      { src: "/decm.png", alt: "DECM" },
+      { src: "/ghv.png", alt: "GHV" },
       { src: "/hermau.png", alt: "Hermau" },
+      { src: "/loka.png", alt: "Loka" },
+      { src: "/mav.png", alt: "MAV" },
       { src: "/mcr.png", alt: "MCR" },
       { src: "/PD.png", alt: "PD" },
-      { src: "/tk.png", alt: "TK" },
       { src: "/PRG.png", alt: "PRG" },
+      { src: "/strictly.png", alt: "Strictly" },
+      { src: "/tk.png", alt: "TK" },
       { src: "/trailers.png", alt: "Trailers" },
     ],
     []
@@ -160,6 +165,8 @@ const Hero = () => {
                         src={logo.src}
                         alt={logo.alt}
                         className="ds-logoImg"
+                        loading="lazy"
+                        decoding="async"
                         draggable={false}
                       />
                     </div>
@@ -178,6 +185,8 @@ const Hero = () => {
                         src={logo.src}
                         alt={logo.alt}
                         className="ds-logoImg"
+                        loading="lazy"
+                        decoding="async"
                         draggable={false}
                       />
                     </div>
@@ -268,10 +277,8 @@ const Hero = () => {
         }
 
         .ds-logoImg {
-          max-width: 100%;
-          max-height: 100%;
-          width: auto;
-          height: auto;
+          width: 100%;
+          height: 100%;
           object-fit: contain;
 
           opacity: 0.98;

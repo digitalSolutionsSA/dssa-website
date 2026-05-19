@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import NavBar from "@/components/NavBar";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
@@ -9,35 +9,39 @@ import Footer from "@/components/Footer";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 
 const Index = () => {
-  // Initialize mouse tracking for logo hover effects
+  const rafRef = useRef<number | null>(null);
+
+  // Throttle mouse/touch tracking to one update per animation frame
   useEffect(() => {
     const root = document.documentElement;
-    
-    const handleMouseMove = (evt) => {
-      let x = evt.clientX / window.innerWidth;
-      let y = evt.clientY / window.innerHeight;
-      
-      root.style.setProperty('--x', (x - 0.5).toString());
-      root.style.setProperty('--y', (y - 0.5).toString());
+
+    const updateVars = (x: number, y: number) => {
+      root.style.setProperty("--x", (x - 0.5).toString());
+      root.style.setProperty("--y", (y - 0.5).toString());
+      rafRef.current = null;
     };
-    
-    // Add touch support for mobile
-    const handleTouchMove = (evt) => {
-      if (evt.touches && evt.touches[0]) {
-        let x = evt.touches[0].clientX / window.innerWidth;
-        let y = evt.touches[0].clientY / window.innerHeight;
-        
-        root.style.setProperty('--x', (x - 0.5).toString());
-        root.style.setProperty('--y', (y - 0.5).toString());
-      }
+
+    const handleMouseMove = (evt: MouseEvent) => {
+      if (rafRef.current) return;
+      const x = evt.clientX / window.innerWidth;
+      const y = evt.clientY / window.innerHeight;
+      rafRef.current = requestAnimationFrame(() => updateVars(x, y));
     };
-    
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('touchmove', handleTouchMove);
-    
+
+    const handleTouchMove = (evt: TouchEvent) => {
+      if (!evt.touches[0] || rafRef.current) return;
+      const x = evt.touches[0].clientX / window.innerWidth;
+      const y = evt.touches[0].clientY / window.innerHeight;
+      rafRef.current = requestAnimationFrame(() => updateVars(x, y));
+    };
+
+    document.addEventListener("mousemove", handleMouseMove, { passive: true });
+    document.addEventListener("touchmove", handleTouchMove, { passive: true });
+
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('touchmove', handleTouchMove);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("touchmove", handleTouchMove);
     };
   }, []);
 

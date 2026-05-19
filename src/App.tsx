@@ -11,18 +11,46 @@ import LoadingScreen from "./components/LoadingScreen";
 import CookieConsent from "./components/CookieConsent";
 // Removed EasterPopup import
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // Data is considered fresh for 5 minutes — prevents redundant refetches
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+    },
+  },
+});
 
 const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate loading time for resources
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000); // Show loading screen for 2 seconds minimum
+    let resolved = false;
+    const MIN_DISPLAY = 600; // minimum branding time (ms)
+    const MAX_WAIT = 800;    // hard ceiling so slow connections aren't punished
 
-    return () => clearTimeout(timer);
+    const startTime = Date.now();
+
+    const done = () => {
+      if (resolved) return;
+      resolved = true;
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, MIN_DISPLAY - elapsed);
+      setTimeout(() => setLoading(false), remaining);
+    };
+
+    const fallback = setTimeout(done, MAX_WAIT);
+
+    if (document.readyState === "complete") {
+      done();
+    } else {
+      window.addEventListener("load", done, { once: true });
+    }
+
+    return () => {
+      clearTimeout(fallback);
+      window.removeEventListener("load", done);
+    };
   }, []);
 
   return (
