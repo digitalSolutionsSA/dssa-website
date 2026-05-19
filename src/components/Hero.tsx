@@ -19,9 +19,9 @@ const Hero = () => {
   };
 
   const COLORS = {
-    deep: "#061B2D",
-    cyan: "#2BC7D6",
-    cyan2: "#6FE9F3",
+    deep: "#030822",
+    cyan: "#0512ce",
+    cyan2: "#4d7fff",
   };
 
   const blobs = useMemo(
@@ -98,9 +98,9 @@ const Hero = () => {
           style={{ paddingBottom: "var(--hero-bottom)" }}
         >
           <div className="w-full text-center">
-            <h1 className="mt-2 font-extrabold tracking-tight leading-[1.05] text-white text-4xl sm:text-5xl lg:text-6xl xl:text-7xl">
+            <h1 className="mt-2 font-display tracking-wide leading-[0.95] text-white text-6xl sm:text-7xl lg:text-8xl xl:text-9xl ds-grunge-heading">
               DESIGNING THE FUTURE
-              <span className="block mt-2" style={{ color: COLORS.cyan2 }}>
+              <span className="block mt-1" style={{ color: COLORS.cyan2 }}>
                 OF YOUR BUSINESS.
               </span>
             </h1>
@@ -132,8 +132,8 @@ const Hero = () => {
             </div>
 
             <p
-              className="mt-5 text-sm sm:text-base font-semibold tracking-wide"
-              style={{ color: COLORS.cyan }}
+              className="mt-5 font-display tracking-widest text-lg sm:text-xl"
+              style={{ color: COLORS.cyan2 }}
             >
               BUILD. BRAND. AUTOMATE.
             </p>

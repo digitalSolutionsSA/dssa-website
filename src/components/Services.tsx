@@ -31,10 +31,10 @@ const Services = () => {
   // Brand palette (same as Hero)
   const COLORS = {
     bgA: "#000000",
-    bgB: "#061B2D",
-    ink: "#071627",
-    cyan: "#2BC7D6",
-    cyan2: "#6FE9F3",
+    bgB: "#030822",
+    ink: "#030822",
+    cyan: "#0512ce",
+    cyan2: "#4d7fff",
   };
 
   const serviceData: Service[] = [
@@ -205,12 +205,12 @@ const Services = () => {
         <div className="text-center mb-12 md:mb-16">
           {/* Removed "Our Expertise" pill */}
 
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight">
+          <h2 className="font-display tracking-wide leading-none text-white ds-grunge-heading" style={{ fontSize: "clamp(2.8rem, 7vw, 5rem)" }}>
             SERVICES BUILT FOR{" "}
             <span
               style={{
-                color: COLORS.cyan,
-                textShadow: "0 0 26px rgba(43,199,214,0.35)",
+                color: COLORS.cyan2,
+                textShadow: "0 0 32px rgba(77,127,255,0.4)",
               }}
             >
               REAL GROWTH

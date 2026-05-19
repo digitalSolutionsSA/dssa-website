@@ -54,6 +54,16 @@ const App = () => {
   }, []);
 
   return (
+    <>
+      {/* Hidden SVG filter used by .ds-grunge-heading for the distressed text effect */}
+      <svg style={{ position: "absolute", width: 0, height: 0, overflow: "hidden" }} aria-hidden="true">
+        <defs>
+          <filter id="grunge-filter" x="-2%" y="-2%" width="104%" height="104%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.70" numOctaves="4" seed="8" stitchTiles="stitch" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.6" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+      </svg>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <div className="w-full max-w-full overflow-x-hidden">
@@ -77,6 +87,7 @@ const App = () => {
         </div>
       </TooltipProvider>
     </QueryClientProvider>
+    </>
   );
 };
 

@@ -20,6 +20,7 @@ export default {
 		extend: {
 			fontFamily: {
 				inter: ['Inter', 'sans-serif'],
+				display: ['"Bebas Neue"', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -65,10 +66,9 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Custom colors based on the logo
-				'digital-navy': '#0A1929',
-				'digital-green': '#8BC34A',
-				'digital-teal': '#00BCD4',
+				'digital-navy': '#030822',
+				'digital-blue': '#0512ce',
+				'digital-blue-light': '#4d7fff',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
