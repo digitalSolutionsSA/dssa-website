@@ -1,80 +1,39 @@
 import React, { useMemo } from "react";
+import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-
-const BLUE = "#0512ce";
-const BLUE_LIGHT = "#4d7fff";
-
-const PaintDrips = ({ color, count = 7 }: { color: string; count?: number }) => {
-  const drips = useMemo(() =>
-    Array.from({ length: count }, (_, i) => ({
-      left: `${4 + i * (92 / (count - 1))}%`,
-      height: `${22 + ((i * 43 + i * i * 11) % 40)}px`,
-      width: `${3 + (i % 3)}px`,
-      opacity: 0.55 + (i % 3) * 0.12,
-    })), [count]
-  );
-  return (
-    <div className="pointer-events-none absolute left-0 right-0" style={{ top: "100%" }}>
-      {drips.map((d, i) => (
-        <div
-          key={i}
-          className="absolute rounded-b-full"
-          style={{
-            top: 0,
-            left: d.left,
-            width: d.width,
-            height: d.height,
-            background: `linear-gradient(to bottom, ${color}, transparent)`,
-            boxShadow: `0 0 6px ${color}88`,
-            opacity: d.opacity,
-          }}
-        />
-      ))}
-    </div>
-  );
-};
-
-const SpraySplatter = ({
-  color,
-  size,
-  style,
-}: {
-  color: string;
-  size: number;
-  style?: React.CSSProperties;
-}) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 100 100"
-    aria-hidden="true"
-    style={{ position: "absolute", ...style }}
-  >
-    <g fill={color}>
-      <ellipse cx="50" cy="50" rx="26" ry="20" transform="rotate(12 50 50)" />
-      <ellipse cx="50" cy="50" rx="16" ry="28" transform="rotate(-22 50 50)" />
-      <circle cx="18" cy="30" r="6" />
-      <circle cx="80" cy="22" r="4" />
-      <circle cx="85" cy="68" r="7" />
-      <circle cx="22" cy="78" r="4" />
-      <circle cx="52" cy="12" r="3" />
-      <circle cx="88" cy="50" r="3" />
-      <circle cx="12" cy="55" r="5" />
-      <ellipse cx="72" cy="88" rx="5" ry="3" transform="rotate(25 72 88)" />
-    </g>
-  </svg>
-);
 
 const Hero = () => {
   const phoneNumber = "+27639034514";
   const message = "Hello! I'm interested in Digital Solutions SA services.";
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+    message
+  )}`;
 
   const scrollToContact = () => {
-    const el = document.getElementById("contact");
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-    else window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    const contactSection = document.getElementById("contact");
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: "smooth" });
+    } else {
+      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    }
   };
+
+  const COLORS = {
+    deep: "#030822",
+    cyan: "#0512ce",
+    cyan2: "#4d7fff",
+  };
+
+  const blobs = useMemo(
+    () => [
+      { x: 8, y: 18, s: 140, o: 0.42, d: 0.0, dur: 12 },
+      { x: 22, y: 72, s: 90, o: 0.35, d: 0.7, dur: 11 },
+      { x: 70, y: 22, s: 110, o: 0.38, d: 0.3, dur: 13 },
+      { x: 88, y: 60, s: 150, o: 0.3, d: 1.0, dur: 14 },
+      { x: 55, y: 80, s: 70, o: 0.36, d: 0.5, dur: 10 },
+    ],
+    []
+  );
 
   const BRAND_LOGOS = useMemo(
     () => [
@@ -97,147 +56,111 @@ const Hero = () => {
   );
 
   return (
-    <section className="ds-wall relative overflow-hidden" style={{ minHeight: "100svh" }}>
-      {/* Background spray clouds */}
+    <section className="relative overflow-hidden bg-black">
+      <div className="absolute inset-0 bg-black" />
+
+      {/* Floating blobs */}
       <div className="pointer-events-none absolute inset-0">
-        <div
-          style={{
-            position: "absolute",
-            top: "-10%",
-            right: "-8%",
-            width: "55%",
-            height: "70%",
-            background: `radial-gradient(ellipse at top right, ${BLUE}20 0%, transparent 60%)`,
-            filter: "blur(50px)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: "5%",
-            left: "-8%",
-            width: "45%",
-            height: "50%",
-            background: `radial-gradient(ellipse at bottom left, ${BLUE_LIGHT}12 0%, transparent 60%)`,
-            filter: "blur(40px)",
-          }}
-        />
-      </div>
-
-      {/* Decorative splatters */}
-      <SpraySplatter
-        color={`${BLUE}1A`}
-        size={260}
-        style={{ top: "4%", right: "1%", opacity: 0.9 }}
-      />
-      <SpraySplatter
-        color="rgba(255,255,255,0.025)"
-        size={180}
-        style={{ top: "35%", left: "0%", opacity: 0.8 }}
-      />
-      <SpraySplatter
-        color={`${BLUE_LIGHT}12`}
-        size={150}
-        style={{ bottom: "18%", right: "8%" }}
-      />
-
-      {/* Corner tag — like a quick marker tag on a wall */}
-      <p
-        aria-hidden="true"
-        className="pointer-events-none absolute font-marker text-white/15 text-sm hidden sm:block"
-        style={{ top: "96px", left: "28px", transform: "rotate(-4deg)" }}
-      >
-        DS.SA // EST.2024
-      </p>
-
-      {/* MAIN CONTENT */}
-      <div
-        className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6"
-        style={{ minHeight: "88svh", paddingTop: "104px", paddingBottom: "185px" }}
-      >
-        {/* Spray-painted label tag */}
-        <div className="ds-label-tag mb-8">DIGITAL SOLUTIONS SA</div>
-
-        {/* Headline */}
-        <div className="relative">
-          {/* Spray glow cloud behind headline */}
-          <div
-            className="pointer-events-none absolute"
+        {blobs.map((b, i) => (
+          <span
+            key={i}
+            className="ds-float absolute rounded-full"
             style={{
-              inset: "-40px -80px",
-              background: `radial-gradient(ellipse at center, ${BLUE}28 0%, transparent 60%)`,
-              filter: "blur(55px)",
+              left: `${b.x}%`,
+              top: `${b.y}%`,
+              width: `${b.s}px`,
+              height: `${b.s}px`,
+              transform: "translate(-50%, -50%)",
+              background: COLORS.deep,
+              opacity: b.o,
+              boxShadow:
+                "0 0 0 1px rgba(255,255,255,0.03) inset, 0 0 22px rgba(6,27,45,0.35)",
+              animation: `ds-circle-float ${b.dur}s ease-in-out ${b.d}s infinite`,
             }}
           />
+        ))}
+      </div>
 
-          <h1
-            className="relative font-stencil leading-[0.9] ds-spray-white ds-grunge-heading"
-            style={{ fontSize: "clamp(3.6rem, 12vw, 10.5rem)", letterSpacing: "0.04em" }}
-          >
-            <span className="block">DESIGNING</span>
-            <span className="block ds-spray-blue" style={{ fontSize: "1.06em" }}>
-              THE FUTURE
-            </span>
-          </h1>
+      {/* Grain */}
+      <div className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-overlay [background-image:radial-gradient(rgba(255,255,255,0.16)_1px,transparent_1px)] [background-size:3px_3px]" />
 
-          {/* Paint drips from blue line */}
-          <div className="relative" style={{ height: 0 }}>
-            <PaintDrips color={BLUE} count={9} />
+      {/* HERO CONTENT */}
+      <div
+        className="relative z-10"
+        style={{
+          paddingTop:
+            "calc(env(safe-area-inset-top, 0px) + var(--hero-top))",
+          minHeight: "var(--hero-h)",
+        }}
+      >
+        <div
+          className="mx-auto flex min-h-[var(--hero-h)] max-w-7xl items-center px-4 sm:px-6"
+          style={{ paddingBottom: "var(--hero-bottom)" }}
+        >
+          <div className="w-full text-center">
+            <h1 className="mt-2 font-display tracking-wide leading-[0.95] text-white text-6xl sm:text-7xl lg:text-8xl xl:text-9xl ds-grunge-heading">
+              DESIGNING THE FUTURE
+              <span className="block mt-1" style={{ color: COLORS.cyan2 }}>
+                OF YOUR BUSINESS.
+              </span>
+            </h1>
+
+            <p className="mt-4 mx-auto max-w-3xl text-base sm:text-lg lg:text-xl text-white/70">
+              Modern websites, apps, automation and marketing that actually
+              performs. Clean builds, sharp design, and systems that don’t fall
+              apart the moment a client clicks a button.
+            </p>
+
+            <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+              <Button
+                className="px-7 py-5 text-base text-white"
+                onClick={scrollToContact}
+                style={{
+                  background: `linear-gradient(90deg, ${COLORS.cyan} 0%, ${COLORS.cyan2} 100%)`,
+                }}
+              >
+                Get Started <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+
+              <Button
+                variant="outline"
+                onClick={scrollToContact}
+                className="px-7 py-5 text-base border-white/20 bg-white/5 text-white hover:bg-white hover:text-black"
+              >
+                Learn More
+              </Button>
+            </div>
+
+            <p
+              className="mt-5 font-display tracking-widest text-lg sm:text-xl"
+              style={{ color: COLORS.cyan2 }}
+            >
+              BUILD. BRAND. AUTOMATE.
+            </p>
           </div>
         </div>
 
-        {/* Hand-tagged subtitle */}
-        <p
-          className="font-marker text-white/80 mt-10"
-          style={{ fontSize: "clamp(1.5rem, 4.5vw, 3rem)" }}
-        >
-          of your business.
-        </p>
+        {/* MARQUEE */}
+        <div className="absolute inset-x-0 bottom-0 z-20">
+          <div className="border-t border-white/10 bg-black/55 backdrop-blur-md">
+            <div className="max-w-7xl mx-auto px-4 pt-3">
+              <p className="text-center text-xs sm:text-sm text-white/70">
+                If these brands can trust us,{" "}
+                <span style={{ color: COLORS.cyan2 }}>so can you.</span>
+              </p>
+            </div>
 
-        {/* Body copy */}
-        <p className="mt-6 max-w-xl text-white/50 text-base sm:text-lg leading-relaxed font-inter">
-          Modern websites, apps, automation and marketing that actually performs.
-          Clean builds. Sharp design. Systems that don't fall apart.
-        </p>
+            <div className="relative overflow-hidden py-5">
+              {/* edge fades */}
+              <div className="pointer-events-none absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-black/90 to-transparent" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-black/90 to-transparent" />
 
-        {/* CTAs */}
-        <div className="mt-10 flex flex-col sm:flex-row gap-4 items-center">
-          <button onClick={scrollToContact} className="ds-btn-spray">
-            GET STARTED <ArrowRight className="inline ml-2 h-4 w-4" />
-          </button>
-          <button onClick={scrollToContact} className="ds-btn-stencil">
-            LEARN MORE
-          </button>
-        </div>
-
-        {/* Tagline marker tag */}
-        <p
-          className="mt-10 font-marker ds-spray-blue tracking-wider"
-          style={{ fontSize: "1.25rem" }}
-        >
-          BUILD. BRAND. AUTOMATE.
-        </p>
-      </div>
-
-      {/* BRAND MARQUEE */}
-      <div className="absolute inset-x-0 bottom-0 z-20">
-        <div className="ds-drip-divider" />
-        <div className="ds-wall border-t border-white/[0.05] bg-black/75 backdrop-blur-md">
-          <p className="text-center pt-3 pb-1 font-marker text-white/35 text-sm tracking-widest">
-            // trusted by //
-          </p>
-          <div className="relative overflow-hidden py-3">
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-black/90 to-transparent z-10" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-black/90 to-transparent z-10" />
-            <div className="ds-marquee">
-              {[0, 1].map((g) => (
-                <div
-                  key={g}
-                  className="ds-marqueeGroup"
-                  aria-hidden={g === 1 ? "true" : undefined}
-                >
+              {/* The track */}
+              <div className="ds-marquee">
+                {/* Group A */}
+                <div className="ds-marqueeGroup">
                   {BRAND_LOGOS.map((logo) => (
-                    <div key={`${logo.src}-${g}`} className="ds-logoWrap">
+                    <div key={logo.src} className="ds-logoWrap" title={logo.alt}>
                       <img
                         src={logo.src}
                         alt={logo.alt}
@@ -249,52 +172,134 @@ const Hero = () => {
                     </div>
                   ))}
                 </div>
-              ))}
+
+                {/* Group B (duplicate of A) */}
+                <div className="ds-marqueeGroup" aria-hidden="true">
+                  {BRAND_LOGOS.map((logo) => (
+                    <div
+                      key={`${logo.src}-dup`}
+                      className="ds-logoWrap"
+                      title={logo.alt}
+                    >
+                      <img
+                        src={logo.src}
+                        alt={logo.alt}
+                        className="ds-logoImg"
+                        loading="lazy"
+                        decoding="async"
+                        draggable={false}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
+
+            <div style={{ height: "env(safe-area-inset-bottom, 0px)" }} />
           </div>
         </div>
       </div>
 
+      {/* STYLES */}
       <style>{`
         :root {
-          --logo-h: 42px;
-          --logo-box-w: 150px;
-          --logo-gap: 44px;
+          --hero-h: 88svh;
+          --hero-top: 96px;
+          --hero-bottom: 140px;
+
+          /* Keep marquee sizing the same */
+          --logo-h: 56px;
+
+          /* New: standardized logo "frame" width */
+          --logo-box-w: 180px;
+
+          /* spacing */
+          --logo-gap: 64px;
         }
+
+        @media (max-width: 1024px) {
+          :root {
+            --hero-h: 84svh;
+            --hero-top: 80px;
+            --hero-bottom: 120px;
+            --logo-h: 48px;
+            --logo-box-w: 160px;
+            --logo-gap: 54px;
+          }
+        }
+
         @media (max-width: 640px) {
-          :root { --logo-h: 34px; --logo-box-w: 120px; --logo-gap: 32px; }
+          :root {
+            --hero-h: 74svh;
+            --hero-top: 64px;
+            --hero-bottom: 108px;
+            --logo-h: 42px;
+            --logo-box-w: 140px;
+            --logo-gap: 44px;
+          }
         }
+
+        @keyframes ds-circle-float {
+          0%, 100% { transform: translate(-50%, -50%) translate3d(0,0,0); }
+          50% { transform: translate(-50%, -50%) translate3d(18px,-14px,0); }
+        }
+
+        /* Continuous right -> left with exact 2-group looping */
         @keyframes ds-marquee-rtl {
           from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
+          to { transform: translateX(-50%); }
         }
+
         .ds-marquee {
-          display: flex; width: 200%;
+          display: flex;
+          width: 200%;
           will-change: transform;
-          animation: ds-marquee-rtl 28s linear infinite;
+          animation: ds-marquee-rtl 22s linear infinite;
         }
+
         .ds-marqueeGroup {
-          flex: 0 0 50%; display: flex;
-          align-items: center; justify-content: space-around;
-          gap: var(--logo-gap); padding: 0 24px;
+          flex: 0 0 50%;
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+          gap: var(--logo-gap);
+          padding: 0 24px;
         }
+
+        /* ✅ Standardized logo frame (does NOT change marquee height) */
         .ds-logoWrap {
           flex: 0 0 auto;
-          width: var(--logo-box-w); height: var(--logo-h);
-          display: flex; align-items: center; justify-content: center;
+          width: var(--logo-box-w);
+          height: var(--logo-h);
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
+
         .ds-logoImg {
-          width: 100%; height: 100%; object-fit: contain;
-          opacity: 0.8;
-          filter: drop-shadow(0 2px 8px rgba(0,0,0,0.55));
-          transition: opacity 200ms ease;
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+
+          opacity: 0.98;
+
+          /* helps coloured logos pop on dark glass */
+          filter: drop-shadow(0 8px 18px rgba(0,0,0,0.35));
+          transition: opacity 220ms ease, transform 220ms ease;
         }
+
         @media (hover: hover) {
           .ds-marquee:hover { animation-play-state: paused; }
-          .ds-logoImg:hover { opacity: 1; }
+          .ds-logoImg:hover {
+            opacity: 1;
+            transform: translateY(-2px) scale(1.03);
+          }
         }
+
         @media (prefers-reduced-motion: reduce) {
-          .ds-marquee { animation: none; }
+          .ds-float, .ds-marquee {
+            animation: none !important;
+          }
         }
       `}</style>
     </section>

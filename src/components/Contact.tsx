@@ -3,100 +3,94 @@ import ContactInfo from "./contact/ContactInfo";
 import ContactForm from "./contact/ContactForm";
 import ContactSuccess from "./contact/ContactSuccess";
 
-const BLUE = "#0512ce";
-const BLUE_LIGHT = "#4d7fff";
-
 const Contact = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmitSuccess = () => {
     setIsSubmitted(true);
+    // After 3 seconds, reset the submitted state
     setTimeout(() => setIsSubmitted(false), 3000);
   };
+
+  // Brand gradient + accent (match Hero/Services)
+  const BG_GRADIENT =
+    "linear-gradient(135deg, #000000 0%, #061B2D 60%, #071627 100%)";
+  const ACCENT_GRADIENT = "linear-gradient(90deg, #2BC7D6 0%, #6FE9F3 100%)";
 
   return (
     <section
       id="contact"
-      className="ds-wall relative overflow-hidden py-20 md:py-28"
+      className="relative overflow-hidden py-20"
+      style={{ background: BG_GRADIENT }}
     >
-      {/* Top drip divider */}
-      <div className="ds-drip-divider" />
+      {/* subtle glows */}
+      <div
+        className="pointer-events-none absolute -top-40 -left-40 h-[620px] w-[620px] rounded-full blur-3xl opacity-20"
+        style={{
+          background:
+            "radial-gradient(circle at center, rgba(111,233,243,0.55) 0%, transparent 60%)",
+        }}
+      />
+      <div
+        className="pointer-events-none absolute -bottom-48 -right-48 h-[720px] w-[720px] rounded-full blur-3xl opacity-15"
+        style={{
+          background:
+            "radial-gradient(circle at center, rgba(43,199,214,0.45) 0%, transparent 55%)",
+        }}
+      />
 
-      {/* Background spray */}
-      <div
-        className="pointer-events-none absolute"
-        style={{
-          bottom: "-10%",
-          left: "-5%",
-          width: "50%",
-          height: "65%",
-          background: `radial-gradient(ellipse at bottom left, ${BLUE}18 0%, transparent 55%)`,
-          filter: "blur(60px)",
-        }}
-      />
-      <div
-        className="pointer-events-none absolute"
-        style={{
-          top: "-5%",
-          right: "-5%",
-          width: "40%",
-          height: "50%",
-          background: `radial-gradient(ellipse at top right, ${BLUE_LIGHT}10 0%, transparent 55%)`,
-          filter: "blur(50px)",
-        }}
-      />
+      {/* grain */}
+      <div className="pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-overlay [background-image:radial-gradient(rgba(255,255,255,0.16)_1px,transparent_1px)] [background-size:3px_3px]" />
 
       <div className="relative container mx-auto px-4 md:px-6">
-        {/* Header */}
-        <div className="mb-16 md:mb-20">
-          <div className="ds-label-tag mb-6">CONTACT</div>
-          <div className="flex flex-col sm:flex-row sm:items-end gap-2 sm:gap-6">
-            <h2
-              className="font-stencil leading-none ds-spray-white ds-grunge-heading"
-              style={{ fontSize: "clamp(3.5rem, 10vw, 8rem)", letterSpacing: "0.04em" }}
+        <div className="text-center mb-16">
+          {/* badge removed */}
+
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
+            Get In{" "}
+            <span
+              style={{
+                background: ACCENT_GRADIENT,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
             >
-              HIT
-              <br />
-              <span className="ds-spray-blue">US UP.</span>
-            </h2>
-            <p
-              className="font-marker text-white/45 pb-2 sm:pb-4"
-              style={{ fontSize: "clamp(1rem, 2.5vw, 1.4rem)" }}
-            >
-              let's build something together.
-            </p>
-          </div>
+              Touch
+            </span>
+          </h2>
+
+          <p className="text-lg text-white/70 max-w-2xl mx-auto">
+            Ready to transform your digital presence? Contact us today and let's
+            discuss how we can help your business grow.
+          </p>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 max-w-6xl">
-          <div className="lg:col-span-2 space-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 max-w-6xl mx-auto">
+          <div className="lg:col-span-2 space-y-6">
             <ContactInfo />
           </div>
 
           <div className="lg:col-span-3">
+            {/* Match ContactInfo card (no blur, no stripe) */}
             <div
+              className="p-8 rounded-2xl border border-white/10 overflow-hidden"
               style={{
-                background: "rgba(13,13,13,0.9)",
-                border: `1px solid rgba(5,18,206,0.3)`,
-                boxShadow: `0 0 0 1px rgba(5,18,206,0.08), 0 20px 70px rgba(0,0,0,0.55)`,
-                padding: "2rem",
+                background: "rgba(7, 22, 39, 0.88)",
+                boxShadow:
+                  "0 20px 70px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.04)",
               }}
             >
               <div className="flex items-center justify-between mb-6">
-                <h3
-                  className="font-stencil text-white tracking-wider"
-                  style={{ fontSize: "1.3rem", letterSpacing: "0.1em" }}
-                >
-                  SEND A MESSAGE
+                <h3 className="text-xl font-bold text-white">
+                  Send us a message
                 </h3>
-                <div
+
+                {/* tiny accent square */}
+                <span
+                  className="h-9 w-9 rounded-xl border border-white/10"
                   style={{
-                    width: "36px",
-                    height: "36px",
-                    background: `linear-gradient(135deg, ${BLUE}, ${BLUE_LIGHT})`,
-                    boxShadow: `0 0 16px rgba(5,18,206,0.4)`,
-                    clipPath: "polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%)",
+                    background: ACCENT_GRADIENT,
+                    boxShadow: "0 0 22px rgba(43,199,214,0.25)",
                   }}
                 />
               </div>
