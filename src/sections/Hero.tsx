@@ -38,7 +38,9 @@ function HeroLayer({ live = false }: { live?: boolean }) {
         </>
       )}
 
-      <div className="relative flex h-full flex-col justify-center px-5 pb-20 pt-24 sm:px-8 lg:px-14">
+      {/* Phones: headline anchored to the upper part of the screen so it never runs into the copy and
+          buttons pinned to the bottom; tablets and up keep it vertically centred */}
+      <div className="relative flex h-full flex-col justify-start px-5 pb-20 pt-[max(22svh,10rem)] sm:px-8 md:justify-center md:pt-24 lg:px-14">
         <div className="display text-[clamp(3rem,11vw,11rem)] leading-[0.86]" aria-hidden={live || undefined}>
           {LINES.map((l, i) => (
             <span key={l.text} data-hero-line={i} className={`block whitespace-nowrap ${l.indent}`}>

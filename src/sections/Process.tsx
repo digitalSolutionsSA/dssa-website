@@ -68,6 +68,26 @@ export default function Process() {
           gsap.fromTo(step.querySelector("[data-step-node]"), { scale: 0 }, { scale: 1, ease: "back.out(3)", scrollTrigger: st });
         });
       });
+
+      // Phones/tablets: a straight signal line down the left gutter fills as you scroll past the steps
+      gsap.matchMedia().add("(max-width: 1023px)", () => {
+        const steps = gsap.utils.toArray<HTMLElement>("[data-step]");
+        const rail = el.querySelector<HTMLElement>("[data-rail]");
+        if (!rail || !steps.length) return;
+        const first = steps[0];
+        const last = steps[steps.length - 1];
+        // Span exactly from the first step to the end of the last one
+        const place = () => {
+          rail.style.top = `${first.offsetTop}px`;
+          rail.style.height = `${last.offsetTop + last.offsetHeight - first.offsetTop}px`;
+        };
+        place();
+        ScrollTrigger.addEventListener("refreshInit", place);
+        const st = { trigger: first, endTrigger: last, start: "top 70%", end: "bottom 70%", scrub: 0.5 };
+        gsap.fromTo("[data-rail-fill]", { scaleY: 0 }, { scaleY: 1, ease: "none", scrollTrigger: st });
+        gsap.fromTo("[data-rail-tip]", { top: "0%" }, { top: "100%", ease: "none", scrollTrigger: st });
+        return () => ScrollTrigger.removeEventListener("refreshInit", place);
+      });
       ScrollTrigger.refresh();
     },
     { scope: root },
@@ -78,6 +98,15 @@ export default function Process() {
       <div aria-hidden className="pointer-events-none absolute inset-0 bg-dots opacity-40" />
 
       <div ref={track} className="relative flex h-full flex-col gap-16 px-5 py-28 sm:px-8 lg:w-max lg:flex-row lg:items-center lg:gap-0 lg:px-0 lg:py-0">
+        {/* Straight line beside the steps (phones/tablets) — sits in the side padding, positioned by JS */}
+        <div data-rail aria-hidden className="pointer-events-none absolute left-2 w-px bg-white/10 sm:left-3 lg:hidden">
+          <div data-rail-fill className="absolute inset-0 origin-top bg-gradient-to-b from-pink to-cyan" />
+          <span
+            data-rail-tip
+            className="absolute left-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan shadow-[0_0_14px_#01ffff]"
+          />
+        </div>
+
         {/* Wave behind the steps (desktop) */}
         <svg
           aria-hidden
