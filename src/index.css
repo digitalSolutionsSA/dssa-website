@@ -87,9 +87,14 @@
     @apply border-border;
   }
 
+  /* The page only ever scrolls up and down. Anything that pokes past the side edges mid-animation
+     (e.g. text sliding in from the right) is clipped instead of letting phones pan sideways.
+     `clip` — not `hidden` — so neither element becomes its own scroll box (that would break
+     smooth scrolling and the scroll-driven animations). */
   html {
     background: #000;
     -webkit-tap-highlight-color: transparent;
+    overflow-x: clip;
   }
 
   body {
@@ -99,7 +104,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   ::selection {
