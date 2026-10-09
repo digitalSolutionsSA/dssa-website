@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import { Send } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { WHATSAPP_NUMBER } from "@/config/site";
+import Button from "@/components/motion/Button";
 
-type ServiceOption =
-  | "Web Development"
-  | "Brand & Design"
-  | "App Development"
-  | "Marketing"
-  | "General Enquiry";
+type ServiceOption = "Web Development" | "Brand & Design" | "App Development" | "Marketing" | "General Enquiry";
+
+const SERVICE_OPTIONS: ServiceOption[] = ["Web Development", "Brand & Design", "App Development", "Marketing", "General Enquiry"];
+
+const inputBase =
+  "w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3.5 text-white placeholder:text-white/30 transition-colors focus:border-cyan focus:outline-none focus:ring-2 focus:ring-cyan/20";
+
+const SELECT_CHEVRON = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none' stroke='%2301ffff' stroke-width='1.5'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E")`;
+
+const labelBase ="mb-2 block font-mono text-[0.65rem] font-medium uppercase tracking-[0.16em] text-white/50";
 
 const ContactForm = ({ onSuccess }: { onSuccess: () => void }) => {
-  const ACCENT_GRADIENT = "linear-gradient(90deg, #2BC7D6 0%, #6FE9F3 100%)";
-  const ACCENT = "#2BC7D6";
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -22,30 +24,8 @@ const ContactForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   const [message, setMessage] = useState("");
 
-  const inputBase =
-    "w-full rounded-md bg-black/30 border border-white/10 px-4 py-3 text-white placeholder:text-white/35 focus:outline-none focus:ring-2";
-
-  const focusHandlers = {
-    onFocus: (
-      e: React.FocusEvent<
-        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-      >
-    ) => {
-      e.currentTarget.style.borderColor = ACCENT;
-    },
-    onBlur: (
-      e: React.FocusEvent<
-        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-      >
-    ) => {
-      e.currentTarget.style.borderColor = "rgba(255,255,255,0.10)";
-    },
-  };
-
   const getServiceLine = () => {
-    return service === "General Enquiry"
-      ? `General Enquiry${generalEnquiry ? `: ${generalEnquiry}` : ""}`
-      : service;
+    return service === "General Enquiry" ? `General Enquiry${generalEnquiry ? `: ${generalEnquiry}` : ""}` : service;
   };
 
   const buildWhatsAppMessage = () => {
@@ -77,138 +57,111 @@ const ContactForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   return (
     <form
-      // KEY: fill parent height + flex column so we can stretch the message area
-      className="h-full flex flex-col gap-4"
-      onSubmit={(e) => {
+      className="flex h-full flex-col gap-5"
+      onSubmit={(e: React.FormEvent) => {
         e.preventDefault();
 
-        // Build WhatsApp URL
-        const waNumber = "27639034514"; // no +, no spaces
         const waText = encodeURIComponent(buildWhatsAppMessage());
-        const waUrl = `https://wa.me/${waNumber}?text=${waText}`;
-
-        // Open WhatsApp
-        window.open(waUrl, "_blank", "noopener,noreferrer");
+        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`, "_blank", "noopener,noreferrer");
 
         // Success UI + clear form
         onSuccess();
         resetForm();
       }}
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         <div>
-          <label className="block text-sm text-white/70 mb-1">
-            Name <span className="text-white/70">*</span>
+          <label htmlFor="cf-name" className={labelBase}>
+            Name *
           </label>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Your name"
-            className={inputBase}
-            {...focusHandlers}
-            required
-          />
+          <input id="cf-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" className={inputBase} required />
         </div>
 
         <div>
-          <label className="block text-sm text-white/70 mb-1">
-            Email <span className="text-white/70">*</span>
+          <label htmlFor="cf-email" className={labelBase}>
+            Email *
           </label>
           <input
+            id="cf-email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="your@email.com"
             type="email"
             className={inputBase}
-            {...focusHandlers}
             required
           />
         </div>
       </div>
 
-      <div>
-        <label className="block text-sm text-white/70 mb-1">Phone Number</label>
-        <input
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          placeholder="+27 63 903 4514"
-          inputMode="tel"
-          className={inputBase}
-          {...focusHandlers}
-        />
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <div>
+          <label htmlFor="cf-phone" className={labelBase}>
+            Phone number
+          </label>
+          <input
+            id="cf-phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="+27 63 903 4514"
+            inputMode="tel"
+            className={inputBase}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="cf-service" className={labelBase}>
+            Service *
+          </label>
+          <select
+            id="cf-service"
+            value={service}
+            onChange={(e) => setService(e.target.value as ServiceOption)}
+            className={`${inputBase} appearance-none pr-10`}
+            style={{ backgroundImage: SELECT_CHEVRON, backgroundRepeat: "no-repeat", backgroundPosition: "right 1rem center", backgroundSize: "12px" }}
+            required
+          >
+            {SERVICE_OPTIONS.map((o) => (
+              <option key={o} value={o} className="bg-ink-3">
+                {o}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      <div>
-        <label className="block text-sm text-white/70 mb-1">
-          Service <span className="text-white/70">*</span>
-        </label>
+      {/* Inline field (NOT a popup) */}
+      {service === "General Enquiry" && (
+        <div>
+          <label htmlFor="cf-general" className={labelBase}>
+            Please specify
+          </label>
+          <input
+            id="cf-general"
+            value={generalEnquiry}
+            onChange={(e) => setGeneralEnquiry(e.target.value)}
+            placeholder="e.g. Pricing, Support, Consultation..."
+            className={inputBase}
+          />
+        </div>
+      )}
 
-        <select
-          value={service}
-          onChange={(e) => setService(e.target.value as ServiceOption)}
-          className={`${inputBase} appearance-none`}
-          {...focusHandlers}
-          required
-        >
-          <option value="Web Development" className="bg-[#071627]">
-            Web Development
-          </option>
-          <option value="Brand & Design" className="bg-[#071627]">
-            Brand & Design
-          </option>
-          <option value="App Development" className="bg-[#071627]">
-            App Development
-          </option>
-          <option value="Marketing" className="bg-[#071627]">
-            Marketing
-          </option>
-          <option value="General Enquiry" className="bg-[#071627]">
-            General Enquiry
-          </option>
-        </select>
-
-        {/* Inline field (NOT a popup) */}
-        {service === "General Enquiry" && (
-          <div className="mt-3">
-            <label className="block text-sm text-white/70 mb-1">
-              Please specify
-            </label>
-            <input
-              value={generalEnquiry}
-              onChange={(e) => setGeneralEnquiry(e.target.value)}
-              placeholder="e.g. Pricing, Support, Consultation..."
-              className={inputBase}
-              {...focusHandlers}
-            />
-          </div>
-        )}
-      </div>
-
-      {/* KEY: this block grows to fill remaining height */}
-      <div className="flex-1 flex flex-col min-h-0">
-        <label className="block text-sm text-white/70 mb-1">
-          Message <span className="text-white/70">*</span>
+      <div className="flex min-h-0 flex-1 flex-col">
+        <label htmlFor="cf-message" className={labelBase}>
+          Message *
         </label>
         <textarea
+          id="cf-message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Your message"
-          className={`${inputBase} flex-1 h-full resize-none`}
-          {...focusHandlers}
+          placeholder="Tell us a bit about your business and what you need"
+          className={`${inputBase} min-h-[9rem] flex-1 resize-none`}
           required
         />
       </div>
 
       <div className="pt-2">
-        <Button
-          type="submit"
-          className="w-full text-black font-semibold"
-          style={{
-            background: ACCENT_GRADIENT,
-            boxShadow: "0 0 22px rgba(43,199,214,0.22)",
-          }}
-        >
-          <Send className="mr-2 h-4 w-4" />
+        <Button type="submit" size="lg" fullWidth>
+          <Send size={16} />
           Send on WhatsApp
         </Button>
       </div>

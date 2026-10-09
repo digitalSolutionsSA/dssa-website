@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local safety copies from the GSAP redesign (old code + client logos) — keep off GitHub
+_backup-before-gsap/

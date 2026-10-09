@@ -17,10 +17,10 @@ const CookieConsent = () => {
   // Brand palette (match your new DSSA vibe)
   const COLORS = {
     bgA: "#000000",
-    bgB: "#061B2D",
-    ink: "#071627",
-    cyan: "#2BC7D6",
-    cyan2: "#6FE9F3",
+    bgB: "#0d0d0f",
+    ink: "#060606",
+    cyan: "#ff66c4",
+    cyan2: "#01ffff",
   };
 
   useEffect(() => {

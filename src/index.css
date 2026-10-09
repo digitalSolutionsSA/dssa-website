@@ -1,11 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* =========================
-   CSS VARIABLES
+   CSS VARIABLES (shadcn/ui — dialogs, toasts, cookie banner)
 ========================= */
 @layer base {
   :root {
@@ -80,204 +78,301 @@
   }
 }
 
+
 /* =========================
-   BASE STYLES (SCROLL FIX)
+   BASE
 ========================= */
 @layer base {
   * {
     @apply border-border;
   }
 
-  html,
-  body,
-  #root {
-    width: 100%;
-    max-width: 100vw;
-    height: 100%;
-
-    overflow-x: hidden;
-    overflow-y: auto;
+  html {
+    background: #000;
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {
-    @apply bg-background text-foreground font-inter;
-    font-family: 'Inter', sans-serif;
+    background: #000;
+    color: #fff;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
 
-    scroll-behavior: smooth;
-    position: relative;
+  ::selection {
+    background: #ff66c4;
+    color: #000;
+  }
 
-    /* Removed overscroll-behavior-y: none;
-       It breaks mouse wheel / trackpad scrolling in some browsers */
+  :focus-visible {
+    outline: 2px solid #01ffff;
+    outline-offset: 3px;
+  }
+
+  img {
+    user-select: none;
   }
 }
 
-/* =========================
-   UTILITIES
-========================= */
-@layer utilities {
-  .clip-polygon {
-    clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
-  }
-
-  .glass-effect {
-    @apply backdrop-blur-md bg-white/10 border border-white/20;
-  }
-
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-digital-gradient animate-gradient-flow;
-    background-size: 200% 200%;
-  }
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
 }
-
-/* =========================
-   HERO BACKGROUND
-========================= */
-.hero-bg {
-  background-image:
-    radial-gradient(circle at 80% 10%, rgba(139, 195, 74, 0.15), transparent),
-    radial-gradient(circle at 20% 80%, rgba(0, 188, 212, 0.15), transparent),
-    linear-gradient(to right bottom, rgba(10, 25, 41, 0.9), rgba(10, 25, 41, 0.95)),
-    url('data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%239C92AC" fill-opacity="0.03" fill-rule="evenodd"%3E%3Ccircle cx="3" cy="3" r="1"/%3E%3C/g%3E%3C/svg%3E');
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
 }
-
-/* =========================
-   SERVICE CARDS
-========================= */
-.service-card {
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.service-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-}
-
-.service-icon {
-  transition: transform 0.5s, color 0.3s;
-}
-
-.service-card:hover .service-icon {
-  transform: scale(1.1);
-  @apply text-digital-teal;
-}
-
-/* =========================
-   HERO GRID EFFECTS
-========================= */
-.hero-grid-item {
-  transition: all 0.3s ease;
-  position: relative;
+.lenis.lenis-stopped {
   overflow: hidden;
 }
 
-.hero-grid-item:hover {
-  transform: translateY(-3px) scale(1.05);
-  z-index: 10;
-  @apply bg-digital-teal/20 border-digital-teal;
-}
-
-.logo-hover {
-  transition: all 0.4s ease;
-}
-
-.hero-grid-item:hover ~ .hero-grid-item .logo-hover {
-  transform: translate(calc(var(--x) * 10px), calc(var(--y) * 10px));
-}
-
-.hero-logo-container {
-  transition: all 0.3s ease;
-}
-
-.hero-grid-item:hover .hero-logo-container {
-  transform: scale(1.1);
-  box-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
-}
-
 /* =========================
-   ANIMATIONS
+   COMPONENTS
 ========================= */
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
+@layer components {
+  /* Display type: tight, heavy, slightly condensed tracking */
+  .display {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    line-height: 0.92;
   }
-  50% {
-    transform: translateY(-10px);
-  }
-}
 
-/* Gradient text animation */
-.gradient-text {
-  background: linear-gradient(90deg, #8BC34A, #00BCD4, #8BC34A);
-  background-size: 200% auto;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradient 8s linear infinite;
-}
-
-@keyframes gradient {
-  0% {
-    background-position: 0% center;
+  /* Mono label: the "code" voice of the site */
+  .label {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
   }
-  100% {
-    background-position: 200% center;
-  }
-}
 
-/* Loading pulse */
-@keyframes pulse {
-  0%,
-  100% {
+  /* Pink → cyan signal gradient */
+  .text-signal {
+    background: linear-gradient(95deg, #ff66c4 0%, #ff9ad8 30%, #9ef7ff 70%, #01ffff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .bg-signal {
+    background: linear-gradient(95deg, #ff66c4, #01ffff);
+  }
+
+  /* Hollow outline type */
+  .text-stroke {
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgb(255 255 255 / 0.85);
+  }
+  .text-stroke-dim {
+    color: transparent;
+    -webkit-text-stroke: 1px rgb(255 255 255 / 0.18);
+  }
+
+  /* Blueprint grid + dot field */
+  .bg-grid {
+    background-image:
+      linear-gradient(rgb(255 255 255 / 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.045) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+  .bg-dots {
+    background-image: radial-gradient(rgb(255 255 255 / 0.12) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  /* CRT scanlines, used very lightly over dark panels */
+  .scanlines::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(0deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 3px);
+  }
+
+  /* Spotlight card: a soft pink/cyan glow tracks the pointer (--sx/--sy set from JS) */
+  .spot {
+    position: relative;
+    isolation: isolate;
+  }
+  .spot::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    background: radial-gradient(420px circle at var(--sx, 50%) var(--sy, 50%), rgb(255 102 196 / 0.16), rgb(1 255 255 / 0.06) 40%, transparent 70%);
+  }
+  .spot:hover::before {
     opacity: 1;
   }
-  50% {
-    opacity: 0.5;
+  /* …and the border lights up under the pointer */
+  .spot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    background: radial-gradient(260px circle at var(--sx, 50%) var(--sy, 50%), #01ffff, #ff66c4 40%, transparent 70%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+  .spot:hover::after {
+    opacity: 1;
+  }
+
+  .pulse-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    border-radius: 9999px;
+    background: #01ffff;
+    animation: pulse-ring 2.4s infinite;
   }
 }
 
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgb(1 255 255 / 0.55); }
+  70% { box-shadow: 0 0 0 9px rgb(1 255 255 / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(1 255 255 / 0); }
 }
 
-/* =========================
-   HEXAGON GRID
-========================= */
-.hexagon-container {
-  position: relative;
+@keyframes blink {
+  50% { opacity: 0; }
+}
+.caret::after {
+  content: '_';
+  margin-left: 0.1em;
+  color: #01ffff;
+  animation: blink 1s steps(1) infinite;
 }
 
-.hexagon {
+/* ---------- Flashlight reveal (after the HOH Tattoos effect) ----------
+   Two stacked layers; the top "reveal" layer only shows inside a soft circle
+   whose centre and radius GSAP drives through --fx / --fy / --fr. */
+@layer components {
+  /* In the components layer so utilities like `absolute inset-0` can override the position */
+  .flashlight {
+    position: relative;
+    overflow: hidden;
+  }
+}
+.flashlight__reveal {
   position: absolute;
-  width: 60px;
-  height: 35px;
-  background: linear-gradient(
-    90deg,
-    rgba(139, 195, 74, 0.1),
-    rgba(0, 188, 212, 0.1)
-  );
-  margin: 17.5px 0;
+  inset: 0;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(circle var(--fr, 0px) at var(--fx, 50%) var(--fy, 50%), #000 58%, transparent 100%);
+  mask-image: radial-gradient(circle var(--fr, 0px) at var(--fx, 50%) var(--fy, 50%), #000 58%, transparent 100%);
 }
-
-.hexagon::before,
-.hexagon::after {
-  content: "";
+/* Thin ring that rides the edge of the light */
+.flashlight__ring {
   position: absolute;
-  width: 0;
-  border-left: 30px solid transparent;
-  border-right: 30px solid transparent;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  border-radius: 9999px;
+  border: 1px solid rgb(1 255 255 / 0.35);
+  box-shadow: 0 0 40px rgb(255 102 196 / 0.15), inset 0 0 30px rgb(1 255 255 / 0.08);
+  will-change: transform, width, height;
 }
 
-.hexagon::before {
-  bottom: 100%;
-  border-bottom: 17.5px solid rgba(139, 195, 74, 0.1);
+/* SplitText pieces.
+   Descenders like y, j, g and p hang below — and y/j sweep left of — their letter box. Padding
+   (cancelled out by negative margin, so nothing moves) gives the line mask and each letter room
+   for those tails: the mask no longer clips them, and gradient text paints all the way into them. */
+.split-char {
+  display: inline-block;
+  will-change: transform;
+  padding: 0 0.12em 0.22em;
+  margin: 0 -0.12em -0.22em;
+}
+.split-line {
+  overflow: hidden;
+  padding: 0 0.15em 0.24em;
+  margin: 0 -0.15em -0.24em;
+}
+/* background-clip:text doesn't reach the pieces SplitText creates, so re-apply it */
+.text-signal :is(div, span) {
+  background: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-.hexagon::after {
-  top: 100%;
-  border-top: 17.5px solid rgba(0, 188, 212, 0.1);
+/* ---------- Custom cursor: a difference-blend dot + a mono label tag ---------- */
+.cursor-dot,
+.cursor-tag {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 400;
+  pointer-events: none;
+  display: none;
+}
+.has-cursor .cursor-dot,
+.has-cursor .cursor-tag {
+  display: block;
+}
+.has-cursor,
+.has-cursor a,
+.has-cursor button,
+.has-cursor [data-cursor] {
+  cursor: none;
+}
+.cursor-dot {
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 9999px;
+  background: #fff;
+  mix-blend-mode: difference;
+  transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1), height 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    margin 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+.cursor-dot.is-hot {
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+}
+.cursor-dot.is-light {
+  opacity: 0;
+}
+.cursor-dot.is-down {
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+}
+.cursor-tag {
+  margin: 18px 0 0 18px;
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  background: #ff66c4;
+  color: #000;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transform-origin: top left;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
 }

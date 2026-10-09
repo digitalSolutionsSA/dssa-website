@@ -1,61 +1,47 @@
-
-import React, { useEffect, useRef } from "react";
-import NavBar from "@/components/NavBar";
-import Hero from "@/components/Hero";
-import Services from "@/components/Services";
-import About from "@/components/About";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
+import { useEffect, useRef, useState } from "react";
+import { introReady } from "@/lib/intro";
+import { useScrollRevealPresets } from "@/hooks/useScrollRevealPresets";
+import { useSignalReveal } from "@/hooks/useSignalReveal";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import ScrollProgress from "@/components/layout/ScrollProgress";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
+import Hero from "@/sections/Hero";
+import Intro from "@/sections/Intro";
+import Services from "@/sections/Services";
+import VelocityBand from "@/sections/VelocityBand";
+import Process from "@/sections/Process";
+import Why from "@/sections/Why";
+import CtaPortal from "@/sections/CtaPortal";
+import Contact from "@/sections/Contact";
 
 const Index = () => {
-  const rafRef = useRef<number | null>(null);
+  const page = useRef<HTMLDivElement>(null);
+  useSignalReveal(page);
+  useScrollRevealPresets();
 
-  // Throttle mouse/touch tracking to one update per animation frame
+  // The floating button sits above everything, so keep it back until the boot screen opens
+  const [introDone, setIntroDone] = useState(false);
   useEffect(() => {
-    const root = document.documentElement;
-
-    const updateVars = (x: number, y: number) => {
-      root.style.setProperty("--x", (x - 0.5).toString());
-      root.style.setProperty("--y", (y - 0.5).toString());
-      rafRef.current = null;
-    };
-
-    const handleMouseMove = (evt: MouseEvent) => {
-      if (rafRef.current) return;
-      const x = evt.clientX / window.innerWidth;
-      const y = evt.clientY / window.innerHeight;
-      rafRef.current = requestAnimationFrame(() => updateVars(x, y));
-    };
-
-    const handleTouchMove = (evt: TouchEvent) => {
-      if (!evt.touches[0] || rafRef.current) return;
-      const x = evt.touches[0].clientX / window.innerWidth;
-      const y = evt.touches[0].clientY / window.innerHeight;
-      rafRef.current = requestAnimationFrame(() => updateVars(x, y));
-    };
-
-    document.addEventListener("mousemove", handleMouseMove, { passive: true });
-    document.addEventListener("touchmove", handleTouchMove, { passive: true });
-
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("touchmove", handleTouchMove);
-    };
+    introReady.then(() => setIntroDone(true));
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <NavBar />
-      <main className="flex-grow">
+    <div ref={page} className="relative flex min-h-screen flex-col bg-black text-white">
+      <ScrollProgress />
+      <Navbar />
+      <main className="relative flex-1">
         <Hero />
+        <Intro />
         <Services />
-        <About />
+        <VelocityBand />
+        <Process />
+        <Why />
+        <CtaPortal />
         <Contact />
       </main>
       <Footer />
-      <FloatingWhatsApp />
+      {introDone && <FloatingWhatsApp />}
     </div>
   );
 };

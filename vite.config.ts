@@ -8,6 +8,12 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    // The project lives on a network share, where native file watching crashes — poll instead
+    watch: {
+      usePolling: true,
+      interval: 300,
+      ignored: ["**/node_modules/**", "**/dist/**", "**/_backup-before-gsap/**", "**/public/**/*.mp4"],
+    },
   },
   plugins: [
     react(),

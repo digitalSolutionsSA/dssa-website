@@ -1,15 +1,18 @@
-
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { initLenis, destroyLenis } from "@/lib/lenis";
+import { introReady } from "@/lib/intro";
+import { prefersReducedMotion } from "@/lib/gsap";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import LoadingScreen from "./components/LoadingScreen";
+import Preloader from "./components/layout/Preloader";
+import ScrollManager from "./components/layout/ScrollManager";
+import Cursor from "./components/layout/Cursor";
 import CookieConsent from "./components/CookieConsent";
-// Removed EasterPopup import
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,63 +25,43 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  const [loading, setLoading] = useState(true);
+  const [introDone, setIntroDone] = useState(false);
 
+  // Smooth scroll is held while the preloader runs, then released with the curtain
   useEffect(() => {
-    let resolved = false;
-    const MIN_DISPLAY = 600; // minimum branding time (ms)
-    const MAX_WAIT = 800;    // hard ceiling so slow connections aren't punished
-
-    const startTime = Date.now();
-
-    const done = () => {
-      if (resolved) return;
-      resolved = true;
-      const elapsed = Date.now() - startTime;
-      const remaining = Math.max(0, MIN_DISPLAY - elapsed);
-      setTimeout(() => setLoading(false), remaining);
-    };
-
-    const fallback = setTimeout(done, MAX_WAIT);
-
-    if (document.readyState === "complete") {
-      done();
-    } else {
-      window.addEventListener("load", done, { once: true });
-    }
-
+    let alive = true;
+    const lenis = prefersReducedMotion() ? null : initLenis();
+    lenis?.stop();
+    introReady.then(() => {
+      if (!alive) return;
+      lenis?.start();
+      setIntroDone(true);
+    });
     return () => {
-      clearTimeout(fallback);
-      window.removeEventListener("load", done);
+      alive = false;
+      destroyLenis();
     };
   }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <div className="w-full max-w-full overflow-x-hidden">
-          <Toaster />
-          <Sonner />
-          {loading ? (
-            <LoadingScreen />
-          ) : (
-            <>
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-                <CookieConsent />
-              </BrowserRouter>
-              {/* Removed EasterPopup component */}
-            </>
-          )}
-        </div>
+        <Toaster />
+        <Sonner />
+        <Preloader />
+        <ScrollManager />
+        <Cursor />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          {introDone && <CookieConsent />}
+        </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
   );
 };
 
 export default App;
-

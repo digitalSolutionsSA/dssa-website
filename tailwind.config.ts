@@ -20,6 +20,12 @@ export default {
 		extend: {
 			fontFamily: {
 				inter: ['Inter', 'sans-serif'],
+				sans: ['Inter', 'system-ui', 'sans-serif'],
+				display: ['"Space Grotesk"', 'Inter', 'sans-serif'],
+				mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+			},
+			transitionTimingFunction: {
+				signal: 'cubic-bezier(0.16, 1, 0.3, 1)',
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -65,10 +71,24 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Custom colors based on the logo
-				'digital-navy': '#0A1929',
-				'digital-green': '#8BC34A',
-				'digital-teal': '#00BCD4',
+				// Site palette: black first, white type, hot pink + electric cyan accents
+				ink: {
+					DEFAULT: '#000000',
+					2: '#060606',
+					3: '#0d0d0f',
+					4: '#16161a',
+				},
+				pink: {
+					DEFAULT: '#ff66c4',
+				},
+				cyan: {
+					DEFAULT: '#01ffff',
+				},
+				mist: '#8d8d96',
+				// Legacy names still used by the legal / success components — mapped onto the new accents
+				'digital-navy': '#000000',
+				'digital-green': '#ff66c4',
+				'digital-teal': '#01ffff',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
