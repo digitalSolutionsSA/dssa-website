@@ -84,8 +84,8 @@ export default function Navbar() {
       <header ref={header} className="pointer-events-none fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6">
         <div
           data-nav-bar
-          className={`pointer-events-auto mx-auto flex max-w-7xl items-center justify-between rounded-full border px-3 py-2 pl-5 transition-[background-color,border-color,backdrop-filter] duration-500 ${
-            scrolled ? "border-white/10 bg-black/70 backdrop-blur-xl" : "border-transparent bg-transparent"
+          className={`pointer-events-auto mx-auto flex max-w-7xl items-center justify-between rounded-full border px-3 py-2 pl-5 transition-[background-color,border-color] duration-500 ${
+            scrolled ? "border-white/10 bg-black/90" : "border-transparent bg-transparent"
           }`}
         >
           <a href="#top" onClick={go("top")} aria-label="Digital Solutions SA — back to top" className="shrink-0">

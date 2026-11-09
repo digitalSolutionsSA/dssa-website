@@ -33,7 +33,12 @@ export default function CtaPortal() {
         // Letters lean away from the pointer (desktop)
         if (matchMedia("(hover: hover)").matches) {
           const chars = split.chars as HTMLElement[];
-          const move = (e: PointerEvent) => {
+          // At most one measurement pass per frame, however fast the pointer reports
+          let queued: PointerEvent | null = null;
+          const apply = () => {
+            const e = queued;
+            queued = null;
+            if (!e) return;
             chars.forEach((c) => {
               const r = c.getBoundingClientRect();
               const dx = r.left + r.width / 2 - e.clientX;
@@ -43,16 +48,29 @@ export default function CtaPortal() {
               gsap.to(c, { x: (dx / (dist || 1)) * push * 26, y: (dy / (dist || 1)) * push * 26, duration: 0.5, ease: "power3", overwrite: "auto" });
             });
           };
-          const leave = () => gsap.to(chars, { x: 0, y: 0, duration: 0.9, ease: "elastic.out(1, 0.4)" });
+          const move = (e: PointerEvent) => {
+            if (!queued) requestAnimationFrame(apply);
+            queued = e;
+          };
+          const leave = () => {
+            queued = null;
+            gsap.to(chars, { x: 0, y: 0, duration: 0.9, ease: "elastic.out(1, 0.4)" });
+          };
           el.addEventListener("pointermove", move);
           el.addEventListener("pointerleave", leave);
+          unbind = () => {
+            el.removeEventListener("pointermove", move);
+            el.removeEventListener("pointerleave", leave);
+          };
         }
       });
 
       let alive = true;
+      let unbind: (() => void) | undefined;
       Promise.all([introReady, document.fonts?.ready]).then(() => alive && build());
       return () => {
         alive = false;
+        unbind?.();
       };
     },
     { scope: root },
@@ -71,7 +89,6 @@ export default function CtaPortal() {
         className="absolute inset-0 flex flex-col items-center justify-center bg-[radial-gradient(circle_at_30%_30%,#ff66c4,transparent_60%),radial-gradient(circle_at_75%_75%,#01ffff,transparent_60%)] bg-[#ff9ee0] px-5 text-center text-black"
         style={{ clipPath: "circle(75% at 50% 50%)" }}
       >
-        <div aria-hidden className="pointer-events-none absolute inset-0 bg-dots opacity-30 mix-blend-multiply" />
         <p data-portal-fade className="label relative text-black/60">
           Got an idea?
         </p>

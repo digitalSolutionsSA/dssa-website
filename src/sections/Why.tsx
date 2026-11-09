@@ -14,7 +14,7 @@ const REASONS = [
 export default function Why() {
   return (
     <section id="why" className="relative overflow-hidden px-5 py-28 sm:px-8 sm:py-36 lg:px-14">
-      <div aria-hidden className="pointer-events-none absolute -right-40 top-10 h-[34rem] w-[34rem] rounded-full bg-pink/10 blur-[140px]" data-float="20" />
+      <div aria-hidden className="pointer-events-none absolute -right-40 top-10 h-[34rem] w-[34rem] glow glow-pink [--glow-a:0.1]" data-float="20" />
 
       <div className="relative mx-auto max-w-7xl">
         <div className="mb-16 grid gap-10 lg:mb-20 lg:grid-cols-[1.2fr_1fr] lg:items-end">

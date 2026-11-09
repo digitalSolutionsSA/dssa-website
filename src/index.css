@@ -3,6 +3,24 @@
 @tailwind utilities;
 
 /* =========================
+   FONTS — self-hosted, so the page doesn't wait on another server
+========================= */
+@font-face { font-family: 'Inter'; font-weight: 400; font-display: swap; src: url('./assets/fonts/inter-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-weight: 500; font-display: swap; src: url('./assets/fonts/inter-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-weight: 600; font-display: swap; src: url('./assets/fonts/inter-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Space Grotesk'; font-weight: 400; font-display: swap; src: url('./assets/fonts/space-grotesk-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Space Grotesk'; font-weight: 500; font-display: swap; src: url('./assets/fonts/space-grotesk-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Space Grotesk'; font-weight: 700; font-display: swap; src: url('./assets/fonts/space-grotesk-latin-700-normal.woff2') format('woff2'); }
+@font-face { font-family: 'JetBrains Mono'; font-weight: 400; font-display: swap; src: url('./assets/fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'JetBrains Mono'; font-weight: 500; font-display: swap; src: url('./assets/fonts/jetbrains-mono-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'JetBrains Mono'; font-weight: 700; font-display: swap; src: url('./assets/fonts/jetbrains-mono-latin-700-normal.woff2') format('woff2'); }
+
+/* Flashlight position. Not inherited, so moving the light doesn't restyle everything inside it. */
+@property --fx { syntax: '<length-percentage>'; inherits: false; initial-value: 50%; }
+@property --fy { syntax: '<length-percentage>'; inherits: false; initial-value: 50%; }
+@property --fr { syntax: '<length>'; inherits: false; initial-value: 0px; }
+
+/* =========================
    CSS VARIABLES (shadcn/ui — dialogs, toasts, cookie banner)
 ========================= */
 @layer base {
@@ -235,20 +253,54 @@ html.lenis body {
   }
 
   .pulse-dot {
+    position: relative;
     display: inline-block;
     width: 7px;
     height: 7px;
     flex-shrink: 0;
     border-radius: 9999px;
     background: #01ffff;
+  }
+  .pulse-dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: #01ffff;
     animation: pulse-ring 2.4s infinite;
+  }
+
+  /* Soft colour glow. A gradient costs almost nothing to draw, unlike a large blur filter.
+     --glow-a is the strength. Overdraws its box because a blur spreads past its edges. */
+  .glow {
+    --glow-a: 0.15;
+  }
+  .glow-pink {
+    --glow-rgb: 255 102 196;
+  }
+  .glow-cyan {
+    --glow-rgb: 1 255 255;
+  }
+  .glow::before {
+    content: '';
+    position: absolute;
+    inset: -35%;
+    background: radial-gradient(
+      closest-side,
+      rgb(var(--glow-rgb) / var(--glow-a)) 0%,
+      rgb(var(--glow-rgb) / calc(var(--glow-a) * 0.82)) 35%,
+      rgb(var(--glow-rgb) / calc(var(--glow-a) * 0.42)) 60%,
+      rgb(var(--glow-rgb) / calc(var(--glow-a) * 0.1)) 85%,
+      transparent 100%
+    );
   }
 }
 
+/* Transform and opacity only, so the pulse never triggers a repaint */
 @keyframes pulse-ring {
-  0% { box-shadow: 0 0 0 0 rgb(1 255 255 / 0.55); }
-  70% { box-shadow: 0 0 0 9px rgb(1 255 255 / 0); }
-  100% { box-shadow: 0 0 0 0 rgb(1 255 255 / 0); }
+  0% { transform: scale(1); opacity: 0.55; }
+  70% { transform: scale(3.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 0; }
 }
 
 @keyframes blink {
@@ -287,7 +339,7 @@ html.lenis body {
   border-radius: 9999px;
   border: 1px solid rgb(1 255 255 / 0.35);
   box-shadow: 0 0 40px rgb(255 102 196 / 0.15), inset 0 0 30px rgb(1 255 255 / 0.08);
-  will-change: transform, width, height;
+  will-change: transform, opacity;
 }
 
 /* SplitText pieces.
@@ -296,7 +348,6 @@ html.lenis body {
    for those tails: the mask no longer clips them, and gradient text paints all the way into them. */
 .split-char {
   display: inline-block;
-  will-change: transform;
   padding: 0 0.12em 0.22em;
   margin: 0 -0.12em -0.22em;
 }

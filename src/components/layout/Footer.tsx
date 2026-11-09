@@ -1,11 +1,13 @@
-import { useState, type MouseEvent } from "react";
+import { lazy, Suspense, useState, type MouseEvent } from "react";
 import { scrollToId } from "@/lib/lenis";
 import { EMAIL, NAV_LINKS, SOCIALS, waLink } from "@/config/site";
 import Flashlight from "@/components/motion/Flashlight";
 import BrandLogo from "@/components/BrandLogo";
-import PrivacyPolicy from "@/components/legal/PrivacyPolicy";
-import TermsOfService from "@/components/legal/TermsOfService";
-import CookiePolicy from "@/components/legal/CookiePolicy";
+
+// The legal dialogs (and the dialog library behind them) only download if someone opens one
+const PrivacyPolicy = lazy(() => import("@/components/legal/PrivacyPolicy"));
+const TermsOfService = lazy(() => import("@/components/legal/TermsOfService"));
+const CookiePolicy = lazy(() => import("@/components/legal/CookiePolicy"));
 
 const socialIcon = "h-4 w-4";
 
@@ -64,6 +66,11 @@ export default function Footer() {
   const [pp, setPp] = useState(false);
   const [tos, setTos] = useState(false);
   const [cp, setCp] = useState(false);
+  const [legalUsed, setLegalUsed] = useState(false);
+  const openLegal = (open: (v: boolean) => void) => () => {
+    setLegalUsed(true);
+    open(true);
+  };
 
   const go = (id: string) => (e: MouseEvent) => {
     e.preventDefault();
@@ -106,13 +113,13 @@ export default function Footer() {
 
           <div>
             <p className={colLabel}>Legal</p>
-            <button type="button" onClick={() => setTos(true)} className={link}>
+            <button type="button" onClick={openLegal(setTos)} className={link}>
               Terms of Service
             </button>
-            <button type="button" onClick={() => setPp(true)} className={link}>
+            <button type="button" onClick={openLegal(setPp)} className={link}>
               Privacy Policy
             </button>
-            <button type="button" onClick={() => setCp(true)} className={link}>
+            <button type="button" onClick={openLegal(setCp)} className={link}>
               Cookie Policy
             </button>
           </div>
@@ -149,9 +156,13 @@ export default function Footer() {
         <span>Made with care in South Africa</span>
       </div>
 
-      <PrivacyPolicy open={pp} onOpenChange={setPp} />
-      <TermsOfService open={tos} onOpenChange={setTos} />
-      <CookiePolicy open={cp} onOpenChange={setCp} />
+      {legalUsed && (
+        <Suspense fallback={null}>
+          <PrivacyPolicy open={pp} onOpenChange={setPp} />
+          <TermsOfService open={tos} onOpenChange={setTos} />
+          <CookiePolicy open={cp} onOpenChange={setCp} />
+        </Suspense>
+      )}
     </footer>
   );
 }

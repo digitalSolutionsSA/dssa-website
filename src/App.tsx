@@ -1,28 +1,16 @@
-import { useEffect, useState } from "react";
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { initLenis, destroyLenis } from "@/lib/lenis";
 import { introReady } from "@/lib/intro";
 import { prefersReducedMotion } from "@/lib/gsap";
 import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
 import Preloader from "./components/layout/Preloader";
 import ScrollManager from "./components/layout/ScrollManager";
 import Cursor from "./components/layout/Cursor";
-import CookieConsent from "./components/CookieConsent";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      // Data is considered fresh for 5 minutes — prevents redundant refetches
-      staleTime: 5 * 60 * 1000,
-      gcTime: 10 * 60 * 1000,
-    },
-  },
-});
+// Not needed for the first paint, so they load separately
+const NotFound = lazy(() => import("./pages/NotFound"));
+const CookieConsent = lazy(() => import("./components/CookieConsent"));
 
 const App = () => {
   const [introDone, setIntroDone] = useState(false);
@@ -44,23 +32,21 @@ const App = () => {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <Preloader />
-        <ScrollManager />
-        <Cursor />
-        <BrowserRouter>
+    <>
+      <Preloader />
+      <ScrollManager />
+      <Cursor />
+      <BrowserRouter>
+        <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<Index />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
           {introDone && <CookieConsent />}
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+        </Suspense>
+      </BrowserRouter>
+    </>
   );
 };
 

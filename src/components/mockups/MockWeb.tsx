@@ -118,7 +118,7 @@ export default function MockWeb({ live = false }: { live?: boolean }) {
         {live ? (
           <div className="relative overflow-hidden rounded-[1.2cqw] bg-[radial-gradient(circle_at_30%_30%,#ff66c4,transparent_55%),radial-gradient(circle_at_75%_70%,#01ffff,transparent_55%)] bg-black">
             <div className="absolute inset-0 bg-grid opacity-40" />
-            <div className="absolute bottom-[8%] left-[10%] right-[10%] rounded-[1cqw] border border-white/20 bg-black/60 p-[1.6cqw] backdrop-blur">
+            <div className="absolute bottom-[8%] left-[10%] right-[10%] rounded-[1cqw] border border-white/20 bg-black/80 p-[1.6cqw]">
               <div className="flex items-center gap-[1cqw] text-[1.4cqw] text-white">
                 <Sparkles className="h-[1.8cqw] w-[1.8cqw] text-pink" /> Enquiry received
               </div>

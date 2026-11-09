@@ -86,8 +86,8 @@ export default function MobileMenu({ open, onClose }: Props) {
     <div ref={root} className="invisible fixed inset-0 z-[70] md:hidden" role="dialog" aria-modal="true" aria-label="Menu">
       <div data-mm-panel className="absolute inset-0 flex flex-col bg-ink-2 px-6 pb-10 pt-24">
         <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid opacity-50" />
-        <div aria-hidden className="pointer-events-none absolute -right-24 top-1/4 h-72 w-72 rounded-full bg-pink/25 blur-[90px]" />
-        <div aria-hidden className="pointer-events-none absolute -left-24 bottom-1/4 h-72 w-72 rounded-full bg-cyan/15 blur-[90px]" />
+        <div aria-hidden className="pointer-events-none absolute -right-24 top-1/4 h-72 w-72 glow glow-pink [--glow-a:0.25]" />
+        <div aria-hidden className="pointer-events-none absolute -left-24 bottom-1/4 h-72 w-72 glow glow-cyan [--glow-a:0.15]" />
 
         <BrandLogo className="absolute left-6 top-6 h-10" />
         <button

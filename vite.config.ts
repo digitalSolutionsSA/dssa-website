@@ -32,14 +32,6 @@ export default defineConfig(({ mode }) => ({
         manualChunks: {
           "react-core": ["react", "react-dom"],
           "router": ["react-router-dom"],
-          "query": ["@tanstack/react-query"],
-          "radix-ui": [
-            "@radix-ui/react-dialog",
-            "@radix-ui/react-tooltip",
-            "@radix-ui/react-toast",
-            "@radix-ui/react-scroll-area",
-            "@radix-ui/react-slot",
-          ],
         },
       },
     },

@@ -37,8 +37,10 @@ export default function Cursor() {
     let last = { x: -100, y: -100 };
 
     // Works out what's under the pointer: hover state, flashlight state and the label tag
+    let inspected: HTMLElement | null = null;
     const inspect = (t: HTMLElement | null) => {
-      if (!t) return;
+      if (!t || t === inspected) return;
+      inspected = t;
       const control = t.closest("a, button, input, textarea, select, label");
       const labelled = t.closest<HTMLElement>("[data-cursor]");
       const next = labelled?.dataset.cursor && (!control || control.contains(labelled) || control === labelled) ? labelled.dataset.cursor : "";
@@ -66,7 +68,16 @@ export default function Cursor() {
       inspect(e.target as HTMLElement);
     };
     // Scrolling moves the page under a still pointer, so re-check what it's over
-    const rescan = () => inspect(document.elementFromPoint(last.x, last.y) as HTMLElement | null);
+    // (at most once per frame: elementFromPoint forces the browser to work out the layout)
+    let rescanQueued = false;
+    const rescan = () => {
+      if (rescanQueued) return;
+      rescanQueued = true;
+      requestAnimationFrame(() => {
+        rescanQueued = false;
+        inspect(document.elementFromPoint(last.x, last.y) as HTMLElement | null);
+      });
+    };
     const down = () => dot.current?.classList.add("is-down");
     const up = () => dot.current?.classList.remove("is-down");
 

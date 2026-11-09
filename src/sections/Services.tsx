@@ -6,6 +6,14 @@ import { SERVICES } from "@/data/services";
 import Flashlight from "@/components/motion/Flashlight";
 import Button from "@/components/motion/Button";
 
+// Phones/tablets: each mockup gets a frame shaped for it (the app needs height for its two phones).
+// From lg up the frame fills the card column as before.
+const MOBILE_FRAME: Record<string, string> = {
+  web: "aspect-[4/3.4]",
+  apps: "aspect-[4/4.6]",
+  marketing: "aspect-square",
+};
+
 /**
  * Three service cards that stack: each one sticks near the top while the next slides up over it,
  * and the one underneath settles back (scales down, dims). The mockup on each card is a flashlight —
@@ -41,12 +49,10 @@ export default function Services() {
       // Desktop stacking: the card underneath recedes as the next one covers it
       gsap.matchMedia().add("(min-width: 1024px)", () => {
         cards.slice(0, -1).forEach((card, i) => {
-          gsap.to(card.querySelector("[data-stack-inner]"), {
-            scale: 0.9 + i * 0.025,
-            filter: "brightness(0.35)",
-            ease: "none",
-            scrollTrigger: { trigger: cards[i + 1], start: "top bottom", end: "top 14%", scrub: true },
-          });
+          const scrollTrigger = { trigger: cards[i + 1], start: "top bottom", end: "top 14%", scrub: true };
+          gsap.to(card.querySelector("[data-stack-inner]"), { scale: 0.9 + i * 0.025, ease: "none", scrollTrigger });
+          // Dims with a black overlay: same look as a brightness filter, without repainting the card
+          gsap.to(card.querySelector("[data-stack-dim]"), { opacity: 0.65, ease: "none", scrollTrigger });
         });
       });
     },
@@ -87,7 +93,8 @@ export default function Services() {
                 data-stack-inner
                 className="scanlines relative grid h-full origin-top overflow-hidden rounded-[2rem] border border-white/10 bg-ink-3 lg:grid-cols-[0.9fr_1.1fr]"
               >
-                <div className="relative z-10 flex flex-col justify-between gap-10 p-7 sm:p-10 lg:p-12">
+                <div data-stack-dim aria-hidden className="pointer-events-none absolute inset-0 z-30 bg-black opacity-0" />
+                <div className="relative z-10 flex flex-col justify-between gap-10 p-6 pt-7 sm:p-10 lg:p-12">
                   <div>
                     <div data-stack-in className="flex items-center justify-between">
                       <span className="label text-white/40">
@@ -117,15 +124,20 @@ export default function Services() {
                       ))}
                     </ul>
                     <div data-stack-in>
-                      <Button href={waLink(`Hi! I'm interested in ${s.title}.`)} variant={i === 1 ? "outline" : "primary"}>
+                      <Button
+                        href={waLink(`Hi! I'm interested in ${s.title}.`)}
+                        variant={i === 1 ? "outline" : "primary"}
+                        className="w-full sm:w-auto"
+                      >
                         Enquire about {s.short.toLowerCase()} <ArrowUpRight size={14} />
                       </Button>
                     </div>
                   </div>
                 </div>
 
-                <div className="relative p-4 pt-0 sm:p-6 sm:pt-0 lg:p-8 lg:pl-0">
-                  <div data-stack-mock className="relative aspect-[4/3] h-full w-full lg:aspect-auto">
+                {/* Phones/tablets: the mockup leads the card; from lg it returns to the right-hand column */}
+                <div className="relative order-first p-3 pb-0 sm:p-6 sm:pb-0 lg:order-none lg:p-8 lg:pl-0">
+                  <div data-stack-mock className={`relative h-full w-full ${MOBILE_FRAME[s.id] ?? "aspect-[4/3]"} lg:aspect-auto`}>
                     <Flashlight
                       className="h-full w-full rounded-[1.5rem]"
                       radius={150}
@@ -142,7 +154,7 @@ export default function Services() {
                         </div>
                       }
                     >
-                      <span className="label pointer-events-none absolute bottom-4 left-4 rounded-full bg-black/70 px-3 py-1.5 text-white/60 backdrop-blur">
+                      <span className="label pointer-events-none absolute bottom-4 left-4 rounded-full bg-black/80 px-3 py-1.5 text-white/60">
                         wireframe <span className={accent}>→</span> live
                       </span>
                     </Flashlight>

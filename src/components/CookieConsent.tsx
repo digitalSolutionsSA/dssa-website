@@ -51,7 +51,6 @@ const CookieConsent = () => {
           "border border-white/10",
           "text-white",
           "rounded-2xl",
-          "backdrop-blur-md",
           "shadow-[0_30px_120px_rgba(0,0,0,0.75)]",
           "overflow-hidden",
         ].join(" ")}
@@ -62,13 +61,13 @@ const CookieConsent = () => {
       >
         {/* Ambient glows */}
         <div
-          className="pointer-events-none absolute -top-20 -left-24 h-[260px] w-[260px] rounded-full blur-3xl opacity-25"
+          className="pointer-events-none absolute -top-20 -left-24 h-[260px] w-[260px] rounded-full opacity-25"
           style={{
             background: `radial-gradient(circle at center, ${COLORS.cyan2} 0%, transparent 60%)`,
           }}
         />
         <div
-          className="pointer-events-none absolute -bottom-24 -right-28 h-[300px] w-[300px] rounded-full blur-3xl opacity-20"
+          className="pointer-events-none absolute -bottom-24 -right-28 h-[300px] w-[300px] rounded-full opacity-20"
           style={{
             background: `radial-gradient(circle at center, ${COLORS.cyan} 0%, transparent 60%)`,
           }}

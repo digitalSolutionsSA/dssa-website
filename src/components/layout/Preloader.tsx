@@ -46,6 +46,7 @@ export default function Preloader() {
           .fromTo(line.querySelector("[data-boot-ok]"), { opacity: 0 }, { opacity: 1, duration: 0.01 }, at + 0.45);
       });
       intro.to(progress, { v: 90, duration: 1.7, ease: "power1.inOut", onUpdate: paint }, 0.2);
+      intro.timeScale(2);
 
       const finish = contextSafe!(() => {
         gsap
@@ -57,12 +58,13 @@ export default function Preloader() {
             },
           })
           .to(progress, { v: 100, duration: 0.4, onUpdate: paint })
-          .to("[data-boot-content]", { opacity: 0, y: -24, filter: "blur(6px)", duration: 0.5, ease: "power2.in" })
+          .to("[data-boot-content]", { opacity: 0, y: -24, duration: 0.5, ease: "power2.in" })
           .fromTo("[data-boot-seam]", { scaleX: 0, opacity: 1 }, { scaleX: 1, duration: 0.55, ease: "expo.inOut" }, "-=0.15")
           .add(markIntroDone)
           .to("[data-boot-top]", { yPercent: -100, duration: 1.1, ease: "expo.inOut" }, "+=0.05")
           .to("[data-boot-bottom]", { yPercent: 100, duration: 1.1, ease: "expo.inOut" }, "<")
-          .to("[data-boot-seam]", { opacity: 0, scaleY: 6, duration: 0.6 }, "<");
+          .to("[data-boot-seam]", { opacity: 0, scaleY: 6, duration: 0.6 }, "<")
+          .timeScale(1.75);
       });
 
       let alive = true;

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { ArrowDown, ArrowRight } from "lucide-react";
-import { gsap, SplitText, prefersReducedMotion, canHover, SCRAMBLE_CHARS } from "@/lib/gsap";
+import { gsap, ScrollTrigger, SplitText, prefersReducedMotion, canHover, SCRAMBLE_CHARS } from "@/lib/gsap";
 import { introReady } from "@/lib/intro";
 import { waLink } from "@/config/site";
 import Flashlight from "@/components/motion/Flashlight";
@@ -22,8 +22,8 @@ function HeroLayer({ live = false }: { live?: boolean }) {
       {live ? (
         <>
           <div className="absolute inset-0 bg-grid [background-size:28px_28px] opacity-90" />
-          <div className="absolute -left-[10%] top-[10%] h-[70vh] w-[70vh] rounded-full bg-pink/30 blur-[120px]" />
-          <div className="absolute -right-[10%] bottom-0 h-[70vh] w-[70vh] rounded-full bg-cyan/20 blur-[120px]" />
+          <div className="absolute -left-[10%] top-[10%] h-[70vh] w-[70vh] glow glow-pink [--glow-a:0.3]" />
+          <div className="absolute -right-[10%] bottom-0 h-[70vh] w-[70vh] glow glow-cyan [--glow-a:0.2]" />
           {/* blueprint crosshairs */}
           <div className="absolute inset-y-0 left-[30%] w-px bg-cyan/25" />
           <div className="absolute inset-x-0 top-[62%] h-px bg-pink/25" />
@@ -33,8 +33,8 @@ function HeroLayer({ live = false }: { live?: boolean }) {
       ) : (
         <>
           <div className="absolute inset-0 bg-grid opacity-50 [mask-image:radial-gradient(ellipse_at_40%_50%,black_10%,transparent_70%)]" />
-          <div data-hero-glow className="absolute -left-[15%] top-[5%] h-[60vh] w-[60vh] rounded-full bg-pink/10 blur-[130px]" />
-          <div data-hero-glow className="absolute -right-[10%] bottom-[-10%] h-[60vh] w-[60vh] rounded-full bg-cyan/[0.07] blur-[130px]" />
+          <div data-hero-glow className="absolute -left-[15%] top-[5%] h-[60vh] w-[60vh] glow glow-pink [--glow-a:0.1]" />
+          <div data-hero-glow className="absolute -right-[10%] bottom-[-10%] h-[60vh] w-[60vh] glow glow-cyan [--glow-a:0.07]" />
         </>
       )}
 
@@ -110,7 +110,7 @@ export default function Hero() {
         });
 
         // Glows breathe slowly so the surface never sits completely still
-        gsap.to("[data-hero-glow]", {
+        const breathe = gsap.to("[data-hero-glow]", {
           x: "random(-80, 80)",
           y: "random(-60, 60)",
           scale: "random(0.85, 1.2)",
@@ -119,6 +119,13 @@ export default function Hero() {
           repeat: -1,
           yoyo: true,
           repeatRefresh: true,
+        });
+        // …but stop working once the hero has scrolled out of view
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top bottom",
+          end: "bottom top",
+          onToggle: (self) => (self.isActive ? breathe.play() : breathe.pause()),
         });
 
         // Scroll away: the three lines shear apart (both layers move together, so they stay aligned)

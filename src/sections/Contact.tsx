@@ -59,7 +59,7 @@ export default function Contact() {
 
   return (
     <section id="contact" className="relative overflow-hidden px-5 py-28 sm:px-8 sm:py-36 lg:px-14">
-      <div aria-hidden className="pointer-events-none absolute -left-40 bottom-0 h-[30rem] w-[30rem] rounded-full bg-cyan/10 blur-[130px]" />
+      <div aria-hidden className="pointer-events-none absolute -left-40 bottom-0 h-[30rem] w-[30rem] glow glow-cyan [--glow-a:0.1]" />
 
       <div className="relative mx-auto max-w-7xl">
         <div className="mb-14 max-w-3xl md:mb-20">

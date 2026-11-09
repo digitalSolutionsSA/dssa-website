@@ -10,7 +10,7 @@ import { resetToTop } from "@/lib/lenis";
 export default function ScrollManager() {
   useEffect(() => {
     // Fonts and lazy images change the layout after mount.
-    const timers = [100, 600, 1500].map((ms) => window.setTimeout(() => ScrollTrigger.refresh(), ms));
+    const timers = [100, 600].map((ms) => window.setTimeout(() => ScrollTrigger.refresh(), ms));
     const refresh = () => ScrollTrigger.refresh();
     document.fonts?.ready.then(refresh);
     window.addEventListener("load", refresh);

@@ -39,14 +39,27 @@ export default function Flashlight({ base, reveal, radius = 200, roam = false, c
       const ringSize = radius * 1.6;
       gsap.set(ringEl, { width: ringSize, height: ringSize, opacity: 0 });
 
-      const paint = () => {
+      const draw = () => {
         mask.style.setProperty("--fx", `${pos.x}px`);
         mask.style.setProperty("--fy", `${pos.y}px`);
         mask.style.setProperty("--fr", `${pos.r}px`);
         const s = pos.r / radius;
-        gsap.set(ringEl, { x: pos.x - ringSize / 2, y: pos.y - ringSize / 2, scale: s, opacity: Math.min(1, s * 1.4) });
+        ringEl.style.transform = `translate3d(${pos.x - ringSize / 2}px, ${pos.y - ringSize / 2}px, 0) scale(${s})`;
+        ringEl.style.opacity = String(Math.min(1, s * 1.4));
       };
-      paint();
+      draw();
+
+      // Several tweens report per frame (x, y, radius) — draw once, after they have all updated
+      let queued = false;
+      const flush = () => {
+        queued = false;
+        draw();
+      };
+      const paint = () => {
+        if (queued) return;
+        queued = true;
+        gsap.ticker.add(flush, true);
+      };
 
       const xTo = gsap.quickTo(pos, "x", { duration: 0.55, ease: "power3", onUpdate: paint });
       const yTo = gsap.quickTo(pos, "y", { duration: 0.55, ease: "power3", onUpdate: paint });
