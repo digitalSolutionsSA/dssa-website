@@ -1,8 +1,8 @@
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import { EMAIL, LOCATION, PHONE_DISPLAY, SOCIALS, WHATSAPP_NUMBER } from "@/config/site";
 import ContactForm from "@/components/contact/ContactForm";
-import ContactSuccess from "@/components/contact/ContactSuccess";
 
 const icon = "h-4 w-4";
 
@@ -55,7 +55,7 @@ const CHANNELS: { href: string; label: string; value: string; icon: ReactNode }[
 
 /** Contact: the form panel wipes in diagonally, channels slide in one after another. */
 export default function Contact() {
-  const [sent, setSent] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <section id="contact" className="relative overflow-hidden px-5 py-28 sm:px-8 sm:py-36 lg:px-14">
@@ -73,13 +73,13 @@ export default function Contact() {
             <span className="text-signal">your project.</span>
           </h2>
           <p data-sr="rise" className="mt-8 max-w-xl text-base leading-relaxed text-white/55 sm:text-lg">
-            Fill in the form and it opens straight in WhatsApp — or reach us on any channel below. We reply within 24 hours.
+            Fill in the form and we’ll get back to you by email — or reach us on any channel below. We reply within 24 hours.
           </p>
         </div>
 
         <div className="grid items-start gap-12 lg:grid-cols-[1.5fr_1fr] lg:gap-16">
           <div data-clip className="spot rounded-[2rem] border border-white/10 bg-ink-3 p-6 sm:p-10">
-            {sent ? <ContactSuccess /> : <ContactForm onSuccess={() => setSent(true)} />}
+            <ContactForm onSuccess={() => navigate("/thank-you")} />
           </div>
 
           <div>

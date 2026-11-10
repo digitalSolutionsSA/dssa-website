@@ -10,6 +10,7 @@ import Cursor from "./components/layout/Cursor";
 
 // Not needed for the first paint, so they load separately
 const NotFound = lazy(() => import("./pages/NotFound"));
+const ThankYou = lazy(() => import("./pages/ThankYou"));
 const CookieConsent = lazy(() => import("./components/CookieConsent"));
 
 const App = () => {
@@ -40,6 +41,7 @@ const App = () => {
         <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/thank-you" element={<ThankYou />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

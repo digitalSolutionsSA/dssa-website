@@ -25,3 +25,11 @@ dist-ssr
 
 # Local safety copies from the GSAP redesign (old code + client logos) — keep off GitHub
 _backup-before-gsap/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Netlify
+.netlify

@@ -23,6 +23,10 @@ const ContactForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const [generalEnquiry, setGeneralEnquiry] = useState("");
 
   const [message, setMessage] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
   const getServiceLine = () => {
     return service === "General Enquiry" ? `General Enquiry${generalEnquiry ? `: ${generalEnquiry}` : ""}` : service;
@@ -58,17 +62,50 @@ const ContactForm = ({ onSuccess }: { onSuccess: () => void }) => {
   return (
     <form
       className="flex h-full flex-col gap-5"
-      onSubmit={(e: React.FormEvent) => {
+      onSubmit={async (e: React.FormEvent) => {
         e.preventDefault();
+        if (sending) return;
+        setSending(true);
+        setError("");
 
-        const waText = encodeURIComponent(buildWhatsAppMessage());
-        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`, "_blank", "noopener,noreferrer");
+        try {
+          const res = await fetch("/api/contact", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name,
+              email,
+              phone,
+              service: getServiceLine(),
+              message,
+              company_website: honeypot,
+            }),
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(data.error || "Could not send your message.");
 
-        // Success UI + clear form
-        onSuccess();
-        resetForm();
+          // Success UI + clear form
+          onSuccess();
+          resetForm();
+        } catch (err) {
+          setError(err instanceof Error ? err.message : "Could not send your message.");
+        } finally {
+          setSending(false);
+        }
       }}
     >
+      {/* Honeypot for bots — hidden from people and screen readers */}
+      <input
+        type="text"
+        name="company_website"
+        value={honeypot}
+        onChange={(e) => setHoneypot(e.target.value)}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute -left-[9999px] h-0 w-0 opacity-0"
+      />
+
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         <div>
           <label htmlFor="cf-name" className={labelBase}>
@@ -159,10 +196,24 @@ const ContactForm = ({ onSuccess }: { onSuccess: () => void }) => {
         />
       </div>
 
+      {error && (
+        <p role="alert" className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+          {error}{" "}
+          <a
+            href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWhatsAppMessage())}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            Send on WhatsApp instead
+          </a>
+        </p>
+      )}
+
       <div className="pt-2">
-        <Button type="submit" size="lg" fullWidth>
+        <Button type="submit" size="lg" fullWidth disabled={sending}>
           <Send size={16} />
-          Send on WhatsApp
+          {sending ? "Sending…" : "Send enquiry"}
         </Button>
       </div>
     </form>
