@@ -17,7 +17,10 @@ const BOOT = [
 export default function Preloader() {
   const root = useRef<HTMLDivElement>(null);
   const count = useRef<HTMLSpanElement>(null);
-  const [done, setDone] = useState(() => prefersReducedMotion());
+  // Landing pages (e.g. the Google Ads contact page) open instantly, without the boot screen
+  const [done, setDone] = useState(
+    () => prefersReducedMotion() || ["/contact", "/thank-you"].includes(window.location.pathname.replace(/\/$/, "")),
+  );
 
   useGSAP(
     (_, contextSafe) => {
