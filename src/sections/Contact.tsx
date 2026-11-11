@@ -1,5 +1,4 @@
 import { type ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import { EMAIL, LOCATION, PHONE_DISPLAY, SOCIALS, WHATSAPP_NUMBER } from "@/config/site";
 import ContactForm from "@/components/contact/ContactForm";
@@ -53,9 +52,18 @@ const CHANNELS: { href: string; label: string; value: string; icon: ReactNode }[
   },
 ];
 
+/**
+ * After a successful enquiry, do a full page load of /thank-you (not an in-app route change)
+ * so the Google tag records it as a page view — that URL is the Google Ads conversion.
+ */
+const goToThankYou = () => {
+  const w = window as typeof window & { dataLayer?: unknown[] };
+  w.dataLayer?.push({ event: "contact_form_submit" });
+  window.location.assign("/thank-you");
+};
+
 /** Contact: the form panel wipes in diagonally, channels slide in one after another. */
 export default function Contact() {
-  const navigate = useNavigate();
 
   return (
     <section id="contact" className="relative overflow-hidden px-5 py-28 sm:px-8 sm:py-36 lg:px-14">
@@ -79,7 +87,7 @@ export default function Contact() {
 
         <div className="grid items-start gap-12 lg:grid-cols-[1.5fr_1fr] lg:gap-16">
           <div data-clip className="spot rounded-[2rem] border border-white/10 bg-ink-3 p-6 sm:p-10">
-            <ContactForm onSuccess={() => navigate("/thank-you")} />
+            <ContactForm onSuccess={goToThankYou} />
           </div>
 
           <div>
